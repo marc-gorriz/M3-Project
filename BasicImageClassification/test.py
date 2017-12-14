@@ -9,14 +9,14 @@ from sklearn.neighbors import KNeighborsClassifier
 start = time.time()
 
 
-def load_data():
+def getData():
     # read the train and test files
 
     # agregar el path como parámetro de entrada a la función
-    train_images_filenames = cPickle.load(open('train_images_filenames.dat', 'r'))
-    test_images_filenames = cPickle.load(open('test_images_filenames.dat', 'r'))
-    train_labels = cPickle.load(open('train_labels.dat', 'r'))
-    test_labels = cPickle.load(open('test_labels.dat', 'r'))
+    train_images_filenames = cPickle.load(open('train_images_filenames.dat', 'rb'))
+    test_images_filenames = cPickle.load(open('test_images_filenames.dat', 'rb'))
+    train_labels = cPickle.load(open('train_labels.dat', 'rb'))
+    test_labels = cPickle.load(open('test_labels.dat', 'rb'))
 
     print('Loaded ' + str(len(train_images_filenames)) + ' training images filenames with classes ', set(train_labels))
     print('Loaded ' + str(len(test_images_filenames)) + ' testing images filenames with classes ', set(test_labels))
