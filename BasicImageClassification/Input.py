@@ -3,7 +3,6 @@ import os
 class Input(Object):
 
     def __init__(self, workingPath, trainImagesFilenames, trainLabels, testImagesFilenames, testLabels):
-
         self.trainImagesFilenames = os.path.join(workingPath,trainImagesFilenames)
         self.trainLabels = os.path.join(workingPath, trainLabels)
 
@@ -18,13 +17,15 @@ class Input(Object):
     def load(self):
         self.train_images_filenames = cPickle.load(open(self.trainImagesFilenames, 'rb'))
         self.train_labels = cPickle.load(open(self.trainLabels, 'rb'))
+        self.classes, self.countsClasses = np.unique(self.train_labels, return_counts=True)
+
         self.test_images_filenames = cPickle.load(open(self.testImagesFilenames, 'rb'))
         self.test_labels = cPickle.load(open(self.testLabels, 'rb'))
 
-        self.data = {"train_images_filenames": train_images_filenames,
-                "test_images_filenames": test_images_filenames,
-                "train_labels": train_labels,
-                "test_labels": test_labels}
+        self.data = {"train_images_filenames": self.train_images_filenames,
+                "test_images_filenames": self.test_images_filenames,
+                "train_labels": self.train_labels,
+                "test_labels": self.test_labels}
 
     def getData(self):
         return self.data
