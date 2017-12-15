@@ -70,8 +70,8 @@ class KNN:
             ima = cv2.imread(filename)
             _, des = mySIFT.image_features(ima)
 
-            predictions = model.predict(des)
-            values, counts = np.unique(predictions, return_counts=True)
+            prediction = model.predict(des)
+            values, counts = np.unique(prediction, return_counts=True)
             predictions.append(values[np.argmax(counts)])
 
         return predictions

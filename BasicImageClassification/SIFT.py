@@ -37,5 +37,4 @@ class SIFT:
             ima = cv2.imread(data_dictionary['filenames'][idx])
             kpt, des = self.image_features(ima)
             Train_descriptors.append(des)
-            print(str(len(kpt)) + ' extracted keypoints and descriptors')
         return Train_descriptors

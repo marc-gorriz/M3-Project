@@ -71,7 +71,7 @@ if __name__ == '__main__':
             model = myKNN.train(train_data)
 
             # validate model
-            predictions = myKNN.predict(validation_data, model)
+            predictions = myKNN.predict(validation_data['filenames'], model)
             # TODO: define the evaluation metrics class Evaluation, decide to plot, save, print ...
             #model_evaluation = Evaluation.evaluation_method(predictions, validation_data['labels'])
 
