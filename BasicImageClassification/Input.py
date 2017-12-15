@@ -19,10 +19,10 @@ class Input:
         self.train_method = train_method
         self.shuffle = shuffle
 
-        self.train_images_filenames = pickle.load(open(os.path.join(workingPath, 'train_images_filenames.dat'), 'rb'))
-        self.train_labels = pickle.load(open(os.path.join(workingPath, 'train_labels.dat'), 'rb'))
-        self.test_images_filenames = pickle.load(open(os.path.join(workingPath, 'test_images_filenames.dat'), 'rb'))
-        self.test_labels = pickle.load(open(os.path.join(workingPath, 'test_labels.dat'), 'rb'))
+        self.train_images_filenames = np.array(pickle.load(open(os.path.join(workingPath, 'train_images_filenames.dat'), 'rb')))
+        self.train_labels = np.array(pickle.load(open(os.path.join(workingPath, 'train_labels.dat'), 'rb')))
+        self.test_images_filenames = np.array(pickle.load(open(os.path.join(workingPath, 'test_images_filenames.dat'), 'rb')))
+        self.test_labels = np.array(pickle.load(open(os.path.join(workingPath, 'test_labels.dat'), 'rb')))
 
         self.classes = np.unique(self.train_labels)  # use set(self.train_labels)
         self.nTrain = len(self.train_images_filenames)
@@ -47,9 +47,10 @@ class Input:
             random.shuffle(self.train_images_filenames, lambda: r)
             random.shuffle(self.train_labels, lambda: r)
 
-        idClasses = []
+        idClasses = np.array([], dtype=int)
         for c in self.classes:
-            idClasses.append(np.where(self.train_labels == c)[0:self.nsamplesClass])
+            idClasses = np.hstack((idClasses, np.where(self.train_labels == c)[0][0:self.nsamplesClass]))
+
 
         self.train_images_filenames = self.train_images_filenames[idClasses]
         self.train_labels = self.train_labels[idClasses]
