@@ -1,7 +1,5 @@
 import argparse
 
-from Evaluation import Evaluation
-
 from Input import Input
 from KNN import KNN
 
@@ -47,10 +45,10 @@ if __name__ == '__main__':
                     # validate model
                     predictions = myKNN.predict(validation_data, k_model)
                     # TODO: define the evaluation metrics class Evaluation, decide to plot, save, print ...
-                    model_evaluation = Evaluation.evaluation_method(predictions, validation_data['labels'])
+                    #model_evaluation = Evaluation.evaluation_method(predictions, validation_data['labels'])
 
                     model.append(k_model)
-                    evaluation_metrics.append(model_evaluation)
+                    #evaluation_metrics.append(model_evaluation)
 
                 else:
                     break
@@ -75,7 +73,7 @@ if __name__ == '__main__':
             # validate model
             predictions = myKNN.predict(validation_data, model)
             # TODO: define the evaluation metrics class Evaluation, decide to plot, save, print ...
-            model_evaluation = Evaluation.evaluation_method(predictions, validation_data['labels'])
+            #model_evaluation = Evaluation.evaluation_method(predictions, validation_data['labels'])
 
             # save model
             myKNN.save_model(model, args.model_path, 'fixed_model.sav')
@@ -94,4 +92,4 @@ if __name__ == '__main__':
         # Test the model
         predictions = myKNN.predict(test_data['filenames'], model)
         # TODO: define the evaluation metrics class Evaluation, decide to plot, save, print ...
-        model_evaluation = Evaluation.evaluation_method(predictions, test_data['labels'])
+        #model_evaluation = Evaluation.evaluation_method(predictions, test_data['labels'])

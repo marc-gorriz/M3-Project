@@ -3,7 +3,7 @@
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
 MODEL_PATH="/imatge/mgorrizwork/master/models/session01"
 CLASSIFIER="knn"
-TRAIN_METHOD="kfold"
+TRAIN_METHOD="fixed"
 K_FOLD_K=5
 
 
