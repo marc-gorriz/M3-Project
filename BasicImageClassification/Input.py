@@ -19,13 +19,13 @@ class Input:
         self.train_method = train_method
         self.shuffle = shuffle
 
-        self.classes = np.unique(self.train_labels) #use set(self.train_labels)
-        self.nTrain = len(self.train_images_filenames)
-
         self.train_images_filenames = pickle.load(open(os.path.join(workingPath, 'train_images_filenames.dat'), 'rb'))
         self.train_labels = pickle.load(open(os.path.join(workingPath, 'train_labels.dat'), 'rb'))
         self.test_images_filenames = pickle.load(open(os.path.join(workingPath, 'test_images_filenames.dat'), 'rb'))
         self.test_labels = pickle.load(open(os.path.join(workingPath, 'test_labels.dat'), 'rb'))
+
+        self.classes = np.unique(self.train_labels)  # use set(self.train_labels)
+        self.nTrain = len(self.train_images_filenames)
 
         self.reduce_data()
 
