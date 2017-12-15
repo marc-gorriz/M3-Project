@@ -29,7 +29,7 @@ class Input:
 
         self.reduce_data()
 
-        if train_method not in ['fixed', 'kfold']:
+        if train_method not in ["fixed", "kfold"]:
             print("Invalid data method")
             #exit()
 
