@@ -64,7 +64,7 @@ class KNN:
         #TODO: same commentary
         mySIFT = SIFT(nfeatures=100)
 
-        predictions = []
+        predictions = np.array([])
         for i in range(len(data)):
             filename = data[i]
             ima = cv2.imread(filename)
@@ -72,7 +72,7 @@ class KNN:
 
             prediction = model.predict(des)
             values, counts = np.unique(prediction, return_counts=True)
-            predictions.append(values[np.argmax(counts)])
+            predictions = np.hstack((predictions, values[np.argmax(counts)])
 
         return predictions
 
