@@ -28,7 +28,7 @@ class KNN:
         train_features = mySIFT.extract_features(data_dictionary)
 
         data = train_features[0]
-        labels = np.array([data_dictionary['labels'][0]] * train_features.shape[0])
+        labels = np.array([data_dictionary['labels'][0]] * train_features[0].shape[0])
 
         for idx in range(1, len(train_features)):
             data = np.vstack((data, train_features[idx]))
