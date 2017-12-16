@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
-MODEL_PATH="/imatge/mgorriz/work/master/models/session01"
+MODEL_PATH="/imatge/mgorriz/work/master/models/session01/fixed_model.pkl"
 EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01"
 CLASSIFIER="knn"
 TRAIN_METHOD="fixed"

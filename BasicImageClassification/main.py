@@ -81,7 +81,7 @@ if __name__ == '__main__':
             myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
             # save model
-            myKNN.save_model(model, args.model_path, args.train_method + '_model.pkl')
+            myKNN.save_model(model, args.model_path)
 
         else:
             print("Invalid train method")
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
         test_data = InputData.method_data_dictionary(InputData.get_test_data(), 'test')
 
-        model = myKNN.load_model(args.model_path, args.train_method + '_model.pkl')
+        model = myKNN.load_model(args.model_path)
 
         # test model
         predictions = myKNN.predict(test_data['filenames'], model, display=True)
