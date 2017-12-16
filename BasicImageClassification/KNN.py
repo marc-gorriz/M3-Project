@@ -77,10 +77,12 @@ class KNN:
         return predictions
 
     def save_model(self, model, path, filename):
-        pickle.dump(model, open(os.path.join(path, filename), 'wb'))
+        with open(os.path.join(path, filename), 'wb') as file:
+            pickle.dump(model, file)
 
     def load_model(self, path, filename):
-        model = pickle.load(open(os.path.join(path, filename), 'rb'))
+        with open(os.path.join(path, filename), 'rb') as file:
+            model = pickle.load(file)
 
         return model
 
