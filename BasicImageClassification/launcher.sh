@@ -1,11 +1,11 @@
 #!/bin/bash
 
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
-MODEL_PATH="/imatge/mgorriz/work/master/models/session01/knn_surf/kfold_model_80.pkl"
-EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01/knn_surf/confusion_matrix_kfold_80.png"
+MODEL_PATH="/imatge/mgorriz/work/master/models/session01/knn_surf/fixed_model_80.pkl"
+EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01/knn_surf/confusion_matrix_fixed_80.png"
 FEATURES_DESCRIPTOR='surf'
 CLASSIFIER="knn"
-TRAIN_METHOD="kfold"
+TRAIN_METHOD="fixed"
 
 if [ "$1" = "train" ]
 then
