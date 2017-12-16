@@ -71,6 +71,7 @@ class KNN:
             if display == True and i % 50 == 0:
                 print("Prediction %d/%d" % (i, nFiles))
 
+
             filename = data[i]
             ima = cv2.imread(filename)
             _, des = mySIFT.image_features(ima)

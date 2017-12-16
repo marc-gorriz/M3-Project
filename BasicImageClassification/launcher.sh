@@ -2,7 +2,7 @@
 
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
 MODEL_PATH="/imatge/mgorriz/work/master/models/session01/fixed_model.pkl"
-EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01"
+EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01/confusion_matrix_kfold_100.png"
 CLASSIFIER="knn"
 TRAIN_METHOD="fixed"
 
