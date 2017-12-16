@@ -91,8 +91,6 @@ class Input:
                     #add loss to the last idx element
                     idx[len(idx) - 1] = np.hstack((idx[len(idx) - 1], loss))
 
-                idx = [np.array([0, 1, 2]), np.array([3, 4, 5]), np.array([6, 7, 8, 9])]
-
                 #ONLY: change the names to change the order if the small part is to train or not
                 validation_idx = idx[self.k_idx]
                 train_idx = np.hstack(np.delete(idx, self.k_idx))
