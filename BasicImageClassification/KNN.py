@@ -69,7 +69,7 @@ class KNN:
         for i in range(len(data)):
 
             if display == True and i % 50 == 0:
-                print("Prediction %d/%d" % i % nFiles)
+                print("Prediction %d/%d" % (i, nFiles))
 
             filename = data[i]
             ima = cv2.imread(filename)
