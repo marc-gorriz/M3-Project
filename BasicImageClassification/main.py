@@ -89,7 +89,7 @@ if __name__ == '__main__':
         print('Training finished: done in ' + str(time.time() - start_time) + ' secs')
 
 
-    elif args.do.test:
+    elif args.do_test:
 
         start_time = time.time()
 
