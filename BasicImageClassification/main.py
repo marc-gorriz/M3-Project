@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_method', type=str, default="kfold")
     parser.add_argument('--kfold_k', type=int, default=5)
     parser.add_argument('--train', dest='do_train', action='store_true', help='Flag to train or not.')
-    parser.add_argument('--test', dest='do_test', action='store_false', help='Flag to test or not.')
+    parser.add_argument('--test', dest='do_test', action='store_true', help='Flag to test or not.')
 
     args = parser.parse_args()
 
