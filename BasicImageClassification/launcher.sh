@@ -1,10 +1,10 @@
 #!/bin/bash
 
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
-MODEL_PATH="/imatge/mgorriz/work/master/models/session01/fixed_model.pkl"
+MODEL_PATH="/imatge/mgorriz/work/master/models/session01/kfold_model_100.pkl"
 EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01/confusion_matrix_kfold_100.png"
 CLASSIFIER="knn"
-TRAIN_METHOD="fixed"
+TRAIN_METHOD="kfold"
 
 if [ "$1" = "train" ]
 then
