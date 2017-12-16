@@ -34,9 +34,10 @@ if __name__ == '__main__':
         features_descriptor = SURF(nOctaves=4, nOctaveLayers=2)
 
     else:
+        features_descriptor = None
         print('Invalid descriptor')
 
-    myKNN = KNN(nneighbors=100)
+    myKNN = KNN(nneighbors=100, features_descriptor=features_descriptor)
     myEvaluation = Evaluation(evaluation_path=args.evaluation_path, save_plots=True)
 
     if args.do_train:
