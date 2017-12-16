@@ -20,7 +20,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     InputData = Input(workingPath=args.data_path, nsamplesClass=30, train_method=args.train_method,
-                      k=args.kfold_k, shuffle=True)
+                      k=args.kfold_k, shuffle=False)
 
     # TODO: think about extend the code to other classification methods, features extractors ... maybe a switch?
 
