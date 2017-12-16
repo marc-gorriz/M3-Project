@@ -29,7 +29,6 @@ if __name__ == '__main__':
 
     if args.do_train:
 
-        print("Training the system ...")
         start_time = time.time()
 
         if args.train_method == 'kfold':
@@ -64,9 +63,9 @@ if __name__ == '__main__':
             model = myEvaluation.best_model(evaluation_metrics, model)
 
             # save model
-            myKNN.save_model(model, args.model_path, + args.train_method + '_model.pkl')
+            myKNN.save_model(model, args.model_path, args.train_method + '_model.pkl')
 
-            print('Training finished: done in' + str(time.time() - start_time) + 'secs')
+            print('Training finished: done in ' + str(time.time() - start_time) + ' secs')
 
         elif args.train_method == 'fixed':
 
@@ -85,7 +84,7 @@ if __name__ == '__main__':
             myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
             # save model
-            myKNN.save_model(model, args.model_path, + args.train_method + '_model.pkl')
+            myKNN.save_model(model, args.model_path, args.train_method + '_model.pkl')
 
         else:
             print("Invalid train method")
@@ -93,16 +92,15 @@ if __name__ == '__main__':
 
     elif args.do.test:
 
-        print("Testing the system ...")
         start_time = time.time()
 
         test_data = InputData.method_data_dictionary(InputData.get_test_data(), 'test')
 
-        model = myKNN.load_model(args.model_path, + args.train_method + '_model.pkl')
+        model = myKNN.load_model(args.model_path, args.train_method + '_model.pkl')
 
         # test model
         predictions = myKNN.predict(test_data['filenames'], model)
         myEvaluation.accuracy(test_data['labels'], predictions, display=True)
         myEvaluation.confusion_matrix(test_data['labels'], predictions, display=True)
 
-        print('Test finished: done in' + str(time.time() - start_time) + 'secs')
+        print('Test finished: done in ' + str(time.time() - start_time) + ' secs')

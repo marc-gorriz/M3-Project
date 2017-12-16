@@ -43,6 +43,6 @@ class SIFT:
             kpt, des = self.image_features(ima)
             Train_descriptors.append(des)
 
-        print('Extraction finished: done in' + str(time.time() - start_time) + 'secs')
+        print('SIFT features extracted: done in ' + str(time.time() - start_time) + ' secs')
 
         return Train_descriptors
