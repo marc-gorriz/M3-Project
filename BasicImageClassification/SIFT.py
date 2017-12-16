@@ -1,3 +1,5 @@
+import time
+
 import cv2
 
 
@@ -11,7 +13,7 @@ class SIFT:
 
         # TODO: detect if python2 or python3 is used
         # create the SIFT detector object
-        self.SIFTdetector = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures) #@python3
+        self.SIFTdetector = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)  # @python3
         # self.SIFTdetector = cv2.SIFT(nfeatures=self.nfeatures) @python2
 
     def image_features(self, ima):
@@ -31,10 +33,16 @@ class SIFT:
         :param data:
         :return:
         """
+        print("SIFT: Extracting features ...")
+        start_time = time.time()
+
         Train_descriptors = []
 
         for idx in range(len(data_dictionary['filenames'])):
             ima = cv2.imread(data_dictionary['filenames'][idx])
             kpt, des = self.image_features(ima)
             Train_descriptors.append(des)
+
+        print('Extraction finished: done in' + str(time.time() - start_time + 'secs'))
+
         return Train_descriptors

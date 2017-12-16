@@ -1,12 +1,16 @@
 import argparse
+import numpy as np
+import time
 
 from Input import Input
 from KNN import KNN
+from Evaluation import Evaluation
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, default="data")
     parser.add_argument('--model_path', type=str, default="model")
+    parser.add_argument('--evaluation_path', type=str, default="evaluation")
     parser.add_argument('--classifier', type=str, default="knn")
     parser.add_argument('--train_method', type=str, default="kfold")
     parser.add_argument('--kfold_k', type=int, default=5)
@@ -21,13 +25,17 @@ if __name__ == '__main__':
     # TODO: think about extend the code to other classification methods, features extractors ... maybe a switch?
 
     myKNN = KNN(nneighbors=100)
+    myEvaluation = Evaluation(evaluation_path=args.evaluation_path, save_plots=True)
 
     if args.do_train:
+
+        print("Training the system ...")
+        start_time = time.time()
 
         if args.train_method == 'kfold':
 
             # make K trainings, save the evaluation metrics and models, then decide the best model
-            evaluation_metrics = []
+            evaluation_metrics = np.array([], dtype=float)
             model = []
 
             for k in range(args.kfold_k):
@@ -44,23 +52,25 @@ if __name__ == '__main__':
 
                     # validate model
                     predictions = myKNN.predict(validation_data, k_model)
-                    # TODO: define the evaluation metrics class Evaluation, decide to plot, save, print ...
-                    #model_evaluation = Evaluation.evaluation_method(predictions, validation_data['labels'])
+                    k_evaluation = myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
                     model.append(k_model)
-                    #evaluation_metrics.append(model_evaluation)
+                    evaluation_metrics = np.hstack(np.delete(evaluation_metrics, k_evaluation))
 
                 else:
                     break
 
             # Decide the best model
-            # TODO: implement a function in KNN to decide the best model based on evaluation_metrics
-            model = myKNN.best_model(model, evaluation_metrics)
+            model = myEvaluation.best_model(evaluation_metrics, model)
 
             # save model
-            myKNN.save_model(model, args.model_path, 'kFold_model.sav')
+            myKNN.save_model(model, args.model_path, + args.train_method + '_model.pkl')
+
+            print('Training finished: done in' + str(time.time() - start_time + 'secs'))
 
         elif args.train_method == 'fixed':
+
+            print("Training the system ...")
 
             labeled_data = InputData.get_labeled_data()
             train_data = InputData.method_data_dictionary(labeled_data, 'train')
@@ -72,11 +82,10 @@ if __name__ == '__main__':
 
             # validate model
             predictions = myKNN.predict(validation_data['filenames'], model)
-            # TODO: define the evaluation metrics class Evaluation, decide to plot, save, print ...
-            #model_evaluation = Evaluation.evaluation_method(predictions, validation_data['labels'])
+            myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
             # save model
-            myKNN.save_model(model, args.model_path, 'fixed_model.pkl')
+            myKNN.save_model(model, args.model_path, + args.train_method + '_model.pkl')
 
         else:
             print("Invalid train method")
@@ -84,12 +93,16 @@ if __name__ == '__main__':
 
     elif args.do.test:
 
+        print("Testing the system ...")
+        start_time = time.time()
+
         test_data = InputData.method_data_dictionary(InputData.get_test_data(), 'test')
 
-        # load model: in that case can be kFold or fixed model
-        model = myKNN.load_model(args.model_path, 'kFold_model.pkl')
+        model = myKNN.load_model(args.model_path, + args.train_method + '_model.pkl')
 
-        # Test the model
+        # test model
         predictions = myKNN.predict(test_data['filenames'], model)
-        # TODO: define the evaluation metrics class Evaluation, decide to plot, save, print ...
-        #model_evaluation = Evaluation.evaluation_method(predictions, test_data['labels'])
+        myEvaluation.accuracy(test_data['labels'], predictions, display=True)
+        myEvaluation.confusion_matrix(test_data['labels'], predictions, display=True)
+
+        print('Test finished: done in' + str(time.time() - start_time + 'secs'))
