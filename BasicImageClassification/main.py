@@ -66,7 +66,7 @@ if __name__ == '__main__':
             # save model
             myKNN.save_model(model, args.model_path, + args.train_method + '_model.pkl')
 
-            print('Training finished: done in' + str(time.time() - start_time + 'secs'))
+            print('Training finished: done in' + str(time.time() - start_time) + 'secs')
 
         elif args.train_method == 'fixed':
 
@@ -105,4 +105,4 @@ if __name__ == '__main__':
         myEvaluation.accuracy(test_data['labels'], predictions, display=True)
         myEvaluation.confusion_matrix(test_data['labels'], predictions, display=True)
 
-        print('Test finished: done in' + str(time.time() - start_time + 'secs'))
+        print('Test finished: done in' + str(time.time() - start_time) + 'secs')
