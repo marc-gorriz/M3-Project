@@ -50,7 +50,7 @@ if __name__ == '__main__':
                     k_model = myKNN.train(train_data)
 
                     # validate model
-                    predictions = myKNN.predict(validation_data, k_model)
+                    predictions = myKNN.predict(validation_data['filenames'], k_model)
                     k_evaluation = myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
                     model.append(k_model)
