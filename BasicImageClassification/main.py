@@ -63,7 +63,7 @@ if __name__ == '__main__':
             model = myEvaluation.best_model(evaluation_metrics, model)
 
             # save model
-            myKNN.save_model(model, args.model_path, args.train_method + '_model.pkl')
+            myKNN.save_model(model, args.model_path)
 
 
         elif args.train_method == 'fixed':
