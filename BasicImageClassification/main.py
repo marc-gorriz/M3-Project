@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    InputData = Input(workingPath=args.data_path, nsamplesClass=50, train_method=args.train_method,
+    InputData = Input(workingPath=args.data_path, nsamplesClass=30, train_method=args.train_method,
                       k=args.kfold_k, shuffle=True)
 
     # TODO: think about extend the code to other classification methods, features extractors ... maybe a switch?
@@ -65,7 +65,6 @@ if __name__ == '__main__':
             # save model
             myKNN.save_model(model, args.model_path, args.train_method + '_model.pkl')
 
-            print('Training finished: done in ' + str(time.time() - start_time) + ' secs')
 
         elif args.train_method == 'fixed':
 
@@ -86,6 +85,8 @@ if __name__ == '__main__':
 
         else:
             print("Invalid train method")
+
+        print('Training finished: done in ' + str(time.time() - start_time) + ' secs')
 
 
     elif args.do.test:
