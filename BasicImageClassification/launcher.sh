@@ -4,7 +4,7 @@ DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
 MODEL_PATH="/imatge/mgorriz/work/master/models/session01"
 EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01"
 CLASSIFIER="knn"
-TRAIN_METHOD="fixed"
+TRAIN_METHOD="kfold"
 
 if [ "$1" = "train" ]
 then
