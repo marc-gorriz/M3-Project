@@ -54,7 +54,7 @@ if __name__ == '__main__':
                     k_evaluation = myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
                     model.append(k_model)
-                    evaluation_metrics = np.hstack((np.delete(evaluation_metrics, k_evaluation)))
+                    evaluation_metrics = np.hstack((evaluation_metrics, k_evaluation))
 
                 else:
                     break
