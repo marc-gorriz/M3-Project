@@ -3,8 +3,9 @@ import pickle
 
 import cv2
 import numpy as np
-from SIFT import SIFT
 from sklearn.neighbors import KNeighborsClassifier
+
+from SIFT import SIFT
 
 
 class KNN:
@@ -23,7 +24,7 @@ class KNN:
         :param data:
         :return:
         """
-        #TODO: extend to other descriptors, put outside and pass as a parameter.
+        # TODO: extend to other descriptors, put outside and pass as a parameter.
         mySIFT = SIFT(nfeatures=100)
         train_features = mySIFT.extract_features(data_dictionary)
 
@@ -52,8 +53,7 @@ class KNN:
 
         return model
 
-
-    def predict(self, data, model, display = True):
+    def predict(self, data, model, display=True):
         """
 
         :param data:
@@ -61,13 +61,16 @@ class KNN:
         :param model_name:
         :return:
         """
-        #TODO: same commentary
+        # TODO: same commentary
         mySIFT = SIFT(nfeatures=100)
-
+        nFiles = len(data)
         predictions = np.array([])
+
         for i in range(len(data)):
-            if display == True:
-                print("prediction: %d", i)
+
+            if display == True and i % 50 == 0:
+                print("Prediction %d/%d" % i % nFiles)
+
             filename = data[i]
             ima = cv2.imread(filename)
             _, des = mySIFT.image_features(ima)
@@ -87,4 +90,3 @@ class KNN:
             model = pickle.load(file)
 
         return model
-
