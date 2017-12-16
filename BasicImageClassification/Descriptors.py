@@ -99,6 +99,6 @@ class SURF:
             data = np.vstack((data, Train_descriptors[idx]))
             labels = np.hstack((labels, np.array([data_dictionary['labels'][idx]] * Train_descriptors[idx].shape[0])))
 
-        print('SIFT features extracted: done in ' + str(time.time() - start_time) + ' secs')
+        print('SURF features extracted: done in ' + str(time.time() - start_time) + ' secs')
 
         return data, labels
