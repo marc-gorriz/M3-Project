@@ -76,7 +76,7 @@ if __name__ == '__main__':
             #model_evaluation = Evaluation.evaluation_method(predictions, validation_data['labels'])
 
             # save model
-            myKNN.save_model(model, args.model_path, 'fixed_model.sav')
+            myKNN.save_model(model, args.model_path, 'fixed_model.pkl')
 
         else:
             print("Invalid train method")
@@ -87,7 +87,7 @@ if __name__ == '__main__':
         test_data = InputData.method_data_dictionary(InputData.get_test_data(), 'test')
 
         # load model: in that case can be kFold or fixed model
-        model = myKNN.load_model(args.model_path, 'kFold_model.sav')
+        model = myKNN.load_model(args.model_path, 'kFold_model.pkl')
 
         # Test the model
         predictions = myKNN.predict(test_data['filenames'], model)
