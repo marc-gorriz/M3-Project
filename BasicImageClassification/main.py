@@ -1,16 +1,19 @@
 import argparse
-import numpy as np
 import time
 
+import numpy as np
+
+from Descriptors import SIFT, SURF
+from Evaluation import Evaluation
 from Input import Input
 from KNN import KNN
-from Evaluation import Evaluation
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, default="data")
     parser.add_argument('--model_path', type=str, default="model")
     parser.add_argument('--evaluation_path', type=str, default="evaluation")
+    parser.add_argument('--descriptor', type=str, default="surf")
     parser.add_argument('--classifier', type=str, default="knn")
     parser.add_argument('--train_method', type=str, default="kfold")
     parser.add_argument('--kfold_k', type=int, default=5)
@@ -23,6 +26,15 @@ if __name__ == '__main__':
                       k=args.kfold_k, shuffle=True)
 
     # TODO: think about extend the code to other classification methods, features extractors ... maybe a switch?
+
+    if args.descriptor == 'sift':
+        features_descriptor = SIFT(nfeatures=100)
+
+    elif args.descriptor == 'surf':
+        features_descriptor = SURF(nOctaves=4, nOctaveLayers=2)
+
+    else:
+        print('Invalid descriptor')
 
     myKNN = KNN(nneighbors=100)
     myEvaluation = Evaluation(evaluation_path=args.evaluation_path, save_plots=True)
@@ -42,7 +54,7 @@ if __name__ == '__main__':
                 labeled_data = InputData.get_labeled_data()
                 train_data = InputData.method_data_dictionary(labeled_data, 'train')
                 validation_data = InputData.method_data_dictionary(labeled_data, 'validation')
-                #del labeled_data
+                # del labeled_data
 
                 if train_data is not False:
 
@@ -71,7 +83,7 @@ if __name__ == '__main__':
             labeled_data = InputData.get_labeled_data()
             train_data = InputData.method_data_dictionary(labeled_data, 'train')
             validation_data = InputData.method_data_dictionary(labeled_data, 'validation')
-            #del labeled_data
+            # del labeled_data
 
             # train model
             model = myKNN.train(train_data)
