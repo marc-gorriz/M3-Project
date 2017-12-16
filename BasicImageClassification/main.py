@@ -69,8 +69,6 @@ if __name__ == '__main__':
 
         elif args.train_method == 'fixed':
 
-            print("Training the system ...")
-
             labeled_data = InputData.get_labeled_data()
             train_data = InputData.method_data_dictionary(labeled_data, 'train')
             validation_data = InputData.method_data_dictionary(labeled_data, 'validation')

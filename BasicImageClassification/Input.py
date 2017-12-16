@@ -55,6 +55,11 @@ class Input:
         self.train_images_filenames = self.train_images_filenames[idClasses]
         self.train_labels = self.train_labels[idClasses]
 
+        if self.shuffle == True:
+            r = random.random()
+            random.shuffle(self.train_images_filenames, lambda: r)
+            random.shuffle(self.train_labels, lambda: r)
+
         #train lenght adjusted to nSamples
         self.nTrain = len(self.train_images_filenames)
 

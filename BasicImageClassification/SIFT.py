@@ -33,7 +33,6 @@ class SIFT:
         :param data:
         :return:
         """
-        print("SIFT: Extracting features ...")
         start_time = time.time()
 
         Train_descriptors = []
