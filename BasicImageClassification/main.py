@@ -50,7 +50,7 @@ if __name__ == '__main__':
                     k_model = myKNN.train(train_data)
 
                     # validate model
-                    predictions = myKNN.predict(validation_data['filenames'], k_model)
+                    predictions = myKNN.predict(validation_data['filenames'], k_model, display=False)
                     k_evaluation = myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
                     model.append(k_model)
@@ -77,7 +77,7 @@ if __name__ == '__main__':
             model = myKNN.train(train_data)
 
             # validate model
-            predictions = myKNN.predict(validation_data['filenames'], model)
+            predictions = myKNN.predict(validation_data['filenames'], model, display=False)
             myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
             # save model
@@ -98,7 +98,7 @@ if __name__ == '__main__':
         model = myKNN.load_model(args.model_path, args.train_method + '_model.pkl')
 
         # test model
-        predictions = myKNN.predict(test_data['filenames'], model)
+        predictions = myKNN.predict(test_data['filenames'], model, display=True)
         myEvaluation.accuracy(test_data['labels'], predictions, display=True)
         myEvaluation.confusion_matrix(test_data['labels'], predictions, display=True)
 

@@ -27,7 +27,7 @@ class Evaluation:
 
         if self.save_plots == True:
             matrix.plot()
-            plt.savefig(os.path.join(self.evaluation_path, 'confusion_matrix.jpg'))
+            plt.savefig(os.path.join(self.evaluation_path, 'confusion_matrix.png'))
 
     def best_model(self, evaluation_array, models):
         idx_best = np.argsort(evaluation_array)[::-1][0]

@@ -53,7 +53,7 @@ class KNN:
         return model
 
 
-    def predict(self, data, model):
+    def predict(self, data, model, display = True):
         """
 
         :param data:
@@ -66,6 +66,8 @@ class KNN:
 
         predictions = np.array([])
         for i in range(len(data)):
+            if display == True:
+                print("prediction: %d", i)
             filename = data[i]
             ima = cv2.imread(filename)
             _, des = mySIFT.image_features(ima)
