@@ -129,7 +129,6 @@ class HOG:
         des = hog(gray, orientations=self.orientations, pixels_per_cell=self.pixels_per_cell,
                   cells_per_block=self.cells_per_block, block_norm=self.block_norm,
                   feature_vector=self.feature_vector)
-        print("des hog: " + str(len(des)))
         kpt = None
 
         return kpt, des
@@ -148,14 +147,11 @@ class HOG:
             ima = cv2.imread(data_dictionary['filenames'][idx])
             kpt, des = self.image_features(ima)
             Train_descriptors.append(des)
-            print("len(des) : " + str(len(des)))
 
         data = Train_descriptors[0]
-        labels = np.array([data_dictionary['labels'][0]])
+        labels = np.array([data_dictionary['labels'][0]] * Train_descriptors[0].shape[0])
 
         for idx in range(1, len(Train_descriptors)):
-            print("len(data) : " + str(len(data)))
-            print("len(Train_descriptors[idx]) : " + str(len(Train_descriptors[idx])))
             data = np.vstack((data, Train_descriptors[idx]))
             labels = np.hstack((labels, np.array([data_dictionary['labels'][idx]])))
 
