@@ -153,7 +153,7 @@ class HOG:
 
         for idx in range(1, len(Train_descriptors)):
             data = np.vstack((data, Train_descriptors[idx]))
-            labels = np.hstack((labels, np.array([data_dictionary['labels'][idx]])))
+            labels = np.hstack((labels, np.array([data_dictionary['labels'][idx]] * Train_descriptors[idx].shape[0])))
 
         print('HOG features extracted: done in ' + str(time.time() - start_time) + ' secs')
 
