@@ -131,6 +131,8 @@ class HOG:
                   feature_vector=self.feature_vector)
         kpt = None
 
+        des = np.reshape(des, [1, len(des)])
+
         return kpt, des
 
     def extract_features(self, data_dictionary):
@@ -149,11 +151,11 @@ class HOG:
             Train_descriptors.append(des)
 
         data = Train_descriptors[0]
-        labels = np.array([data_dictionary['labels'][0]] * Train_descriptors[0].shape[0])
+        labels = np.array([data_dictionary['labels'][0]])
 
         for idx in range(1, len(Train_descriptors)):
             data = np.vstack((data, Train_descriptors[idx]))
-            labels = np.hstack((labels, np.array([data_dictionary['labels'][idx]] * Train_descriptors[idx].shape[0])))
+            labels = np.hstack((labels, np.array([data_dictionary['labels'][idx]])))
 
         print('HOG features extracted: done in ' + str(time.time() - start_time) + ' secs')
 
