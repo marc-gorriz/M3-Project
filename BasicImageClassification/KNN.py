@@ -53,7 +53,7 @@ class KNN:
             _, des = self.features_descriptor.image_features(ima)
 
             prediction = model.predict(des)
-            values, counts = np.unique(prediction, return_counts=True)
+            #values, counts = np.unique(prediction, return_counts=True)
             predictions = np.hstack((predictions, values[np.argmax(counts)]))
 
         return predictions
