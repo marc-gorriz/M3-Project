@@ -69,24 +69,23 @@ class Input:
         :return:
         """
 
-
         if self.train_method == 'fixed':
             # return 80% train and 20% validation
             train_idx = np.arange(int(np.ceil(self.nTrain * 0.8)))
             validation_idx = np.arange(int(np.ceil(self.nTrain * 0.8)), self.nTrain)
 
-            return {"train_images_filenames": self.train_images_filenames[train_idx],
-                    "train_labels": self.train_labels[train_idx],
-                    "validation_images_filenames": self.train_images_filenames[validation_idx],
-                    "validation_labels": self.train_labels[validation_idx]}
-
         elif self.train_method == 'kfold':
-
             train_idx, validation_idx = self.kfold_generator.next()
-            return {"train_images_filenames": self.train_images_filenames[train_idx],
-                    "train_labels": self.train_labels[train_idx],
-                    "validation_images_filenames": self.train_images_filenames[validation_idx],
-                    "validation_labels": self.train_labels[validation_idx]}
+
+        else:
+            train_idx, validation_idx = None, None
+            print('Invalid train method')
+
+
+        return {"train_images_filenames": self.train_images_filenames[train_idx],
+                "train_labels": self.train_labels[train_idx],
+                "validation_images_filenames": self.train_images_filenames[validation_idx],
+                "validation_labels": self.train_labels[validation_idx]}
 
     def get_test_data(self):
         """
