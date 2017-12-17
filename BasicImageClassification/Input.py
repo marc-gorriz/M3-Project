@@ -3,7 +3,7 @@ import random
 
 import pickle
 import numpy as np
-
+from sklearn.model_selection import KFold
 
 class Input:
     def __init__(self, workingPath, nsamplesClass, train_method='kfold', k=5, shuffle=True):
@@ -34,8 +34,8 @@ class Input:
             #exit()
 
         if train_method == 'kfold':
-            self.k = k
-            self.k_idx = 0
+            id_train = np.arange(self.nTrain)
+            self.kfold_generator = KFold(n_splits=k, shuffle = True).split(id_train)
 
     def reduce_data(self):
         """
@@ -81,31 +81,12 @@ class Input:
                     "validation_labels": self.train_labels[validation_idx]}
 
         elif self.train_method == 'kfold':
-            if self.k_idx < self.k:
-                idx = np.arange(self.nTrain)
-                try:
-                    idx = np.split(idx, self.k)
-                except ValueError:
-                    loss = idx[self.nTrain - self.nTrain % self.k:self.nTrain]
-                    idx = np.split(idx[0:self.nTrain - self.nTrain % self.k], self.k)
-                    #add loss to the last idx element
-                    idx[len(idx) - 1] = np.hstack((idx[len(idx) - 1], loss))
 
-                #ONLY: change the names to change the order if the small part is to train or not
-                validation_idx = idx[self.k_idx]
-                train_idx = np.hstack(np.delete(idx, self.k_idx))
-
-                self.k_idx += 1
-
-                #TODO: join the returns for all the train_methods
-
-                return {"train_images_filenames": self.train_images_filenames[train_idx],
-                        "train_labels": self.train_labels[train_idx],
-                        "validation_images_filenames": self.train_images_filenames[validation_idx],
-                        "validation_labels": self.train_labels[validation_idx]}
-            else:
-                self.k_idx = 0
-                return False
+            train_idx, validation_idx = self.kfold_generator.next()
+            return {"train_images_filenames": self.train_images_filenames[train_idx],
+                    "train_labels": self.train_labels[train_idx],
+                    "validation_images_filenames": self.train_images_filenames[validation_idx],
+                    "validation_labels": self.train_labels[validation_idx]}
 
     def get_test_data(self):
         """
@@ -122,9 +103,6 @@ class Input:
         :param method:
         :return:
         """
-        if data_dictionary == False:
-            print("No data available: Kfold is over.")
-            return False
 
         if method in ['train', 'validation', 'test']:
             return {"filenames": data_dictionary[str(method) + '_images_filenames'],

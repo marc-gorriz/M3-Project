@@ -57,20 +57,16 @@ if __name__ == '__main__':
                 validation_data = InputData.method_data_dictionary(labeled_data, 'validation')
                 # del labeled_data
 
-                if train_data is not False:
+                # train model
+                k_model = myKNN.train(train_data)
 
-                    # train model
-                    k_model = myKNN.train(train_data)
+                # validate model
+                predictions = myKNN.predict(validation_data['filenames'], k_model, display=False)
+                k_evaluation = myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
 
-                    # validate model
-                    predictions = myKNN.predict(validation_data['filenames'], k_model, display=False)
-                    k_evaluation = myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
+                model.append(k_model)
+                evaluation_metrics = np.hstack((evaluation_metrics, k_evaluation))
 
-                    model.append(k_model)
-                    evaluation_metrics = np.hstack((evaluation_metrics, k_evaluation))
-
-                else:
-                    break
 
             # Decide the best model
             model = myEvaluation.best_model(evaluation_metrics, model)
