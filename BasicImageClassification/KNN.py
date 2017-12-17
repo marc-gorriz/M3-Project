@@ -54,7 +54,8 @@ class KNN:
 
             prediction = model.predict(des)
             #values, counts = np.unique(prediction, return_counts=True)
-            predictions = np.hstack((predictions, values[np.argmax(counts)]))
+            #predictions = np.hstack((predictions, values[np.argmax(counts)]))
+            predictions = np.hstack((predictions, prediction))
 
         return predictions
 
