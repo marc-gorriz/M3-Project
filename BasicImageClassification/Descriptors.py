@@ -2,6 +2,7 @@ import time
 
 import cv2
 import numpy as np
+from skimage.feature import hog
 
 
 class SIFT:
@@ -102,3 +103,63 @@ class SURF:
         print('SURF features extracted: done in ' + str(time.time() - start_time) + ' secs')
 
         return data, labels
+
+
+    class HOG:
+        def __init__(self, orientations=8, pixels_per_cell=(16, 16), cells_per_block=(1, 1), block_norm='L2',
+                     feature_vector=True):
+            """
+
+            :param nfeatures:
+            """
+            self.orientations = orientations
+            self.pixels_per_cell = pixels_per_cell
+            self.cells_per_block = cells_per_block
+            self.block_norm = block_norm
+            self.feature_vector = feature_vector
+
+        def image_features(self, ima):
+            """
+
+            :param ima:
+            :return:
+            """
+
+            gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
+            des = hog(gray, orientations=self.orientations, pixels_per_cell=self.pixels_per_cell,
+                      cells_per_block=self.cells_per_block, block_norm=self.block_norm,
+                      feature_vector=self.feature_vector)
+            print("des hog: " + str(len(des)))
+            kpt = None
+
+            return kpt, des
+
+        def extract_features(self, data_dictionary):
+            """
+
+            :param data:
+            :return:
+            """
+            start_time = time.time()
+
+            Train_descriptors = []
+
+            for idx in range(len(data_dictionary['filenames'])):
+                ima = cv2.imread(data_dictionary['filenames'][idx])
+                kpt, des = self.image_features(ima)
+                Train_descriptors.append(des)
+                print("len(des) : " + str(len(des)))
+
+            data = Train_descriptors[0]
+            labels = np.array([data_dictionary['labels'][0]])
+
+            for idx in range(1, len(Train_descriptors)):
+                print("len(data) : " + str(len(data)))
+                print("len(Train_descriptors[idx]) : " + str(len(Train_descriptors[idx])))
+                data = np.vstack((data, Train_descriptors[idx]))
+                labels = np.hstack((labels, np.array([data_dictionary['labels'][idx]])))
+
+            print('HOG features extracted: done in ' + str(time.time() - start_time) + ' secs')
+
+            return data, labels
+

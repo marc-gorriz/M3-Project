@@ -1,9 +1,9 @@
 #!/bin/bash
 
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
-MODEL_PATH="/imatge/mgorriz/work/master/models/session01/knn_surf/kfold5_model_4.pkl"
-EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01/knn_surf/confusion_matrix_kfold5_4.png"
-FEATURES_DESCRIPTOR='surf'
+MODEL_PATH="/imatge/mgorriz/work/master/models/session01/knn_hog/hog_model.pkl"
+EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01/knn_hog/confusion_matrix_hog.png"
+FEATURES_DESCRIPTOR='hog'
 CLASSIFIER="knn"
 TRAIN_METHOD="kfold"
 

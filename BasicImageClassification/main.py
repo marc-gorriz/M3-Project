@@ -3,7 +3,7 @@ import time
 
 import numpy as np
 
-from Descriptors import SIFT, SURF
+from Descriptors import SIFT, SURF, HOG
 from Evaluation import Evaluation
 from Input import Input
 from KNN import KNN
@@ -32,6 +32,9 @@ if __name__ == '__main__':
 
     elif args.descriptor == 'surf':
         features_descriptor = SURF(nOctaves=4, nOctaveLayers=2)
+
+    elif args.descriptor == 'hog':
+        features_descriptor = HOG()
 
     else:
         features_descriptor = None
