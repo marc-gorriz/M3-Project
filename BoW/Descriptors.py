@@ -3,6 +3,8 @@ import time
 import cv2
 import numpy as np
 from skimage.feature import hog
+from sklearn import cluster
+import pickle
 
 
 class SIFT:
@@ -55,15 +57,30 @@ class SIFT:
 
         return data, labels
 
+    def extract_features_simple(self, data_dictionary):
+
+        start_time = time.time()
+
+        Train_descriptors = []
+
+        for idx in range(len(data_dictionary['filenames'])):
+            ima = cv2.imread(data_dictionary['filenames'][idx])
+            kpt, des = self.image_features(ima)
+            Train_descriptors.append(des)
+
+        print('SIFT features extracted: done in ' + str(time.time() - start_time) + ' secs')
+
+        return Train_descriptors
+
+
 class SURF:
     def __init__(self, nOctaves=4, nOctaveLayers=2):
         """
 
         :param nfeatures:
         """
-        self.nOctaves=nOctaves
-        self.nOctaveLayers=nOctaveLayers
-
+        self.nOctaves = nOctaves
+        self.nOctaveLayers = nOctaveLayers
 
         self.SURFdetector = cv2.xfeatures2d.SURF_create(nOctaves=self.nOctaves, nOctaveLayers=self.nOctaveLayers)
 
@@ -161,3 +178,52 @@ class HOG:
 
         return data, labels
 
+
+class BOW:
+    def __init__(self, k):
+        self.k = k
+
+    def compute_codebook(self, Train_descriptors):
+        # Transform everything to numpy arrays
+        size_descriptors = Train_descriptors[0].shape[1]
+        D = np.zeros((np.sum([len(p) for p in Train_descriptors]), size_descriptors), dtype=np.uint8)
+        startingpoint = 0
+        for i in range(len(Train_descriptors)):
+            D[startingpoint:startingpoint + len(Train_descriptors[i])] = Train_descriptors[i]
+            startingpoint += len(Train_descriptors[i])
+
+        print('Computing kmeans with ' + str(self.k) + ' centroids')
+
+        init = time.time()
+        codebook = cluster.MiniBatchKMeans(n_clusters=self.k, verbose=False, batch_size=self.k * 20,
+                                           compute_labels=False,
+                                           reassignment_ratio=10 ** -4, random_state=42)
+        codebook.fit(D)
+
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
+        return codebook
+
+    def extract_features(self, Train_descriptors, codebook):
+
+        # get train visual word encoding
+        print('Getting Train BoVW representation')
+        init = time.time()
+        visual_words = np.zeros((len(Train_descriptors), self.k), dtype=np.float32)
+        for i in xrange(len(Train_descriptors)):
+            words = codebook.predict(Train_descriptors[i])
+            visual_words[i, :] = np.bincount(words, minlength=self.k)
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
+
+        return visual_words
+
+    def save(self, codebook, path):
+        with open(path, 'wb') as file:
+            pickle.dump(codebook, file)
+
+    def load(self, path):
+        with open(path, 'rb') as file:
+            codebook = pickle.load(file)
+
+        return codebook
