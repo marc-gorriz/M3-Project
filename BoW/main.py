@@ -1,5 +1,6 @@
 import argparse
 import time
+import os
 
 import numpy as np
 
@@ -21,7 +22,8 @@ if __name__ == '__main__':
     parser.add_argument('--kfold_k', type=int, default=5)
     parser.add_argument('--train', dest='do_train', action='store_true', help='Flag to train or not.')
     parser.add_argument('--test', dest='do_test', action='store_true', help='Flag to test or not.')
-    parser.add_argument('--compute_features', dest='do_compute_features', action='store_true', help='Flag to compute_features or not.')
+    parser.add_argument('--compute_features', dest='do_compute_features', action='store_true',
+                        help='Flag to compute_features or not.')
 
     args = parser.parse_args()
 
@@ -51,19 +53,20 @@ if __name__ == '__main__':
 
         if args.do_compute_features:
             train_descriptors = sift_descriptors.extract_features_simple(data_dictionary=train_data)
-            codebook = bow_descriptor.compute_codebook(train_descriptors)
-            bow_descriptor.save(codebook, args.codebook_path, 'codebook')
-            visual_words = bow_descriptor.extract_features(train_descriptors, codebook)
-            bow_descriptor.save(visual_words, args.visualwords_path, 'visualwords')
-
+            train_codebook = bow_descriptor.compute_codebook(train_descriptors)
+            bow_descriptor.save(train_codebook, os.path.join(args.codebook_path, 'train_codebook.pkl'), 'codebook')
+            train_visual_words = bow_descriptor.extract_features(train_descriptors, train_codebook)
+            bow_descriptor.save(train_visual_words, os.path.join(args.visualwords_path,
+                                'train_visual_words.npy'), 'visualwords')
 
         else:
-            #codebook = bow_descriptor.load(args.codebook_path, 'codebook')
-            visual_words = bow_descriptor.load(args.codebook_path, 'visualwords')
+            # codebook = bow_descriptor.load(args.codebook_path, 'codebook')
+            train_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
+                                'train_visual_words.npy'), 'visualwords')
 
         # train model
-        model = mySVM.train(visual_words, train_data)
-        #predictions = [classes_names[i] for i in model.predict(visual_words)]
+        model = mySVM.train(train_visual_words, train_data)
+        # predictions = [classes_names[i] for i in model.predict(visual_words)]
 
 
 

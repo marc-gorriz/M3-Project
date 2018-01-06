@@ -1,9 +1,9 @@
 #!/bin/bash
 
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
-MODEL_PATH="/imatge/mgorriz/work/master/models/session02/test1/hog_model.pkl"
-CODEBOOK_PATH="/imatge/mgorriz/work/master/models/session02/test1/codebook.pkl"
-VISUALWORDS_PATH="/imatge/mgorriz/work/master/models/session02/test1/visualwords.npy"
+MODEL_PATH="/imatge/mgorriz/work/master/models/session02/test1/model.pkl"
+CODEBOOK_PATH="/imatge/mgorriz/work/master/models/session02/test1/"
+VISUALWORDS_PATH="/imatge/mgorriz/work/master/models/session02/test1/"
 EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session02/test1/confusion_matrix_hog.png"
 
 if [ "$1" = "train" ]
