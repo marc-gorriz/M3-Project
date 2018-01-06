@@ -16,7 +16,6 @@ if __name__ == '__main__':
     parser.add_argument('--evaluation_path', type=str, default="evaluation")
     parser.add_argument('--descriptor', type=str, default="bow")
     parser.add_argument('--classifier', type=str, default="svm")
-    parser.add_argument('--train_method', type=str, default="kfold")
     parser.add_argument('--kfold_k', type=int, default=5)
     parser.add_argument('--train', dest='do_train', action='store_true', help='Flag to train or not.')
     parser.add_argument('--test', dest='do_test', action='store_true', help='Flag to test or not.')
