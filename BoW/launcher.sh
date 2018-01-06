@@ -4,7 +4,7 @@ DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
 MODEL_PATH="/imatge/mgorriz/work/master/models/session02/test1/model.pkl"
 CODEBOOK_PATH="/imatge/mgorriz/work/master/models/session02/test1/"
 VISUALWORDS_PATH="/imatge/mgorriz/work/master/models/session02/test1/"
-EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session02/test1/confusion_matrix_hog.png"
+EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session02/test1/confusion_matrix.png"
 
 if [ "$1" = "train" ]
 then
