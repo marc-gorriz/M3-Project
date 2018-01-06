@@ -1,8 +1,11 @@
 import pickle
 
 import cv2
+import time
 import numpy as np
+from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
 
 
 class KNN:
@@ -68,3 +71,42 @@ class KNN:
             model = pickle.load(file)
 
         return model
+
+
+class SVM:
+
+    def __init__(self, kernel='rbf', C=1, gamma=.002):
+        self.kernel = kernel
+        self.C = C
+        self.gamma = gamma
+
+
+    def train(self, visual_words, train_data):
+
+        print('Training the SVM classifier...')
+
+        init = time.time()
+
+        stdSlr = StandardScaler().fit(visual_words)
+        D_scaled = stdSlr.transform(visual_words)
+        model = svm.SVC(kernel='rbf', C=1, gamma=.002).fit(D_scaled, train_data['train_labels'])
+
+        end = time.time()
+        print('Done in ' + str(end - init) + ' secs.')
+
+        return model
+
+    #def predict(self):
+
+
+    def save_model(self, model, path):
+        with open(path, 'wb') as file:
+            pickle.dump(model, file)
+
+    def load_model(self, path):
+        with open(path, 'rb') as file:
+            model = pickle.load(file)
+
+        return model
+
+

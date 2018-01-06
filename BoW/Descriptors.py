@@ -204,7 +204,7 @@ class BOW:
         print('Done in ' + str(end - init) + ' secs.')
         return codebook
 
-    def extract_features(self, Train_descriptors, codebook):
+    def extract_features(self, Train_descriptors, codebook, path=None):
 
         # get train visual word encoding
         print('Getting Train BoVW representation')
@@ -218,12 +218,30 @@ class BOW:
 
         return visual_words
 
-    def save(self, codebook, path):
-        with open(path, 'wb') as file:
-            pickle.dump(codebook, file)
+    def save(self, file, path, type):
 
-    def load(self, path):
-        with open(path, 'rb') as file:
-            codebook = pickle.load(file)
+        if type == 'codebook':
+            with open(path, 'wb') as file_name:
+                pickle.dump(file, file_name)
 
-        return codebook
+        elif type == 'visualwords':
+            np.save(file, path)
+        else:
+            print('invalid file')
+
+    def load(self, path, type):
+
+        if type == 'codebook':
+            with open(path, 'rb') as file:
+                file = pickle.load(file)
+
+        elif type == 'visualwords':
+            file = np.load(path)
+
+        else:
+            file = None
+            print('Invalid path')
+
+        return file
+
+

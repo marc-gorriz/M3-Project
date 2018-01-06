@@ -2,6 +2,7 @@
 
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
 MODEL_PATH="/imatge/mgorriz/work/master/models/session01/knn_hog/hog_model.pkl"
+CODEBOOK_PATH= "/imatge/mgorriz/work/master/models/session01/knn_hog/codebook.pkl"
 EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session01/knn_hog/confusion_matrix_hog.png"
 FEATURES_DESCRIPTOR='hog'
 CLASSIFIER="knn"

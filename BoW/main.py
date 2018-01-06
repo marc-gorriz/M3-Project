@@ -3,22 +3,25 @@ import time
 
 import numpy as np
 
-from Descriptors import SIFT, SURF, HOG
+from Descriptors import SIFT, BOW
 from Evaluation import Evaluation
 from Input import Input
-from KNN import KNN
+from Classifiers import SVM
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, default="data")
     parser.add_argument('--model_path', type=str, default="model")
+    parser.add_argument('--codebook_path', type=str, default="codebook")
+    parser.add_argument('--visualwords_path', type=str, default="visualwords_path")
     parser.add_argument('--evaluation_path', type=str, default="evaluation")
-    parser.add_argument('--descriptor', type=str, default="surf")
+    parser.add_argument('--descriptor', type=str, default="bow")
     parser.add_argument('--classifier', type=str, default="knn")
     parser.add_argument('--train_method', type=str, default="kfold")
     parser.add_argument('--kfold_k', type=int, default=5)
     parser.add_argument('--train', dest='do_train', action='store_true', help='Flag to train or not.')
     parser.add_argument('--test', dest='do_test', action='store_true', help='Flag to test or not.')
+    parser.add_argument('--compute_features', dest='do_compute_features', action='store_true', help='Flag to compute_features or not.')
 
     args = parser.parse_args()
 
@@ -27,78 +30,44 @@ if __name__ == '__main__':
 
     # TODO: think about extend the code to other classification methods, features extractors ... maybe a switch?
 
-    if args.descriptor == 'sift':
-        features_descriptor = SIFT(nfeatures=100)
-
-    elif args.descriptor == 'surf':
-        features_descriptor = SURF(nOctaves=4, nOctaveLayers=2)
-
-    elif args.descriptor == 'hog':
-        features_descriptor = HOG()
+    if args.descriptor == 'bow':
+        sift_descriptors = SIFT(nfeatures=100)
+        bow_descriptor = BOW(k=512)
 
     else:
-        features_descriptor = None
+        sift_descriptors = None
+        bow_descriptor = None
         print('Invalid descriptor')
 
-    myKNN = KNN(nneighbors=100, features_descriptor=features_descriptor)
+    mySVM = SVM(kernel='rbf', C=1, gamma=.002)
     myEvaluation = Evaluation(evaluation_path=args.evaluation_path, save_plots=True)
 
     if args.do_train:
 
         start_time = time.time()
+        labeled_data = InputData.get_labeled_data()
+        train_data = InputData.method_data_dictionary(labeled_data, 'train')
+        validation_data = InputData.method_data_dictionary(labeled_data, 'validation')
 
-        if args.train_method == 'kfold':
-
-            # make K trainings, save the evaluation metrics and models, then decide the best model
-            evaluation_metrics = np.array([], dtype=float)
-            model = []
-
-            for k in range(args.kfold_k):
-
-                labeled_data = InputData.get_labeled_data()
-                train_data = InputData.method_data_dictionary(labeled_data, 'train')
-                validation_data = InputData.method_data_dictionary(labeled_data, 'validation')
-                # del labeled_data
-
-                # train model
-                k_model = myKNN.train(train_data)
-
-                # validate model
-                predictions = myKNN.predict(validation_data['filenames'], k_model, display=False)
-                k_evaluation = myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
-
-                model.append(k_model)
-                evaluation_metrics = np.hstack((evaluation_metrics, k_evaluation))
-
-
-            # Decide the best model
-            model = myEvaluation.best_model(evaluation_metrics, model)
-
-            # save model
-            myKNN.save_model(model, args.model_path)
-
-
-        elif args.train_method == 'fixed':
-
-            labeled_data = InputData.get_labeled_data()
-            train_data = InputData.method_data_dictionary(labeled_data, 'train')
-            validation_data = InputData.method_data_dictionary(labeled_data, 'validation')
-            # del labeled_data
-
-            # train model
-            model = myKNN.train(train_data)
-
-            # validate model
-            predictions = myKNN.predict(validation_data['filenames'], model, display=False)
-            myEvaluation.accuracy(validation_data['labels'], predictions, display=True)
-
-            # save model
-            myKNN.save_model(model, args.model_path)
+        if args.do_compute_features:
+            train_descriptors = sift_descriptors.extract_features_simple(data_dictionary=train_data)
+            codebook = bow_descriptor.compute_codebook(train_descriptors)
+            bow_descriptor.save(codebook, args.codebook_path, 'codebook')
+            visual_words = bow_descriptor.extract_features(train_descriptors, codebook)
+            bow_descriptor.save(visual_words, args.visualwords_path, 'visualwords')
 
         else:
-            print("Invalid train method")
+            #codebook = bow_descriptor.load(args.codebook_path, 'codebook')
+            visual_words = bow_descriptor.load(args.codebook_path, 'visualwords')
 
-        print('Training finished: done in ' + str(time.time() - start_time) + ' secs')
+        # train model
+        model = mySVM.train(visual_words, train_data)
+        #predictions = [classes_names[i] for i in model.predict(visual_words)]
+
+
+
+
+
 
 
     elif args.do_test:
