@@ -24,13 +24,12 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    InputData = Input(workingPath=args.data_path, nsamplesClass=80, train_method=args.train_method,
-                      k=args.kfold_k, shuffle=True)
+    InputData = Input(workingPath=args.data_path, nsamplesClass=80, shuffle=False)
 
     # TODO: think about extend the code to other classification methods, features extractors ... maybe a switch?
 
     if args.descriptor == 'bow':
-        sift_descriptors = SIFT(nfeatures=100)
+        sift_descriptors = SIFT(nfeatures=300)
         bow_descriptor = BOW(k=512)
 
     else:

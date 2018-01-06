@@ -25,7 +25,7 @@ class Input:
         self.classes = np.unique(self.train_labels)  # use set(self.train_labels)
         self.nTrain = len(self.train_images_filenames)
 
-        self.reduce_data()
+        #self.reduce_data()
 
     def reduce_data(self):
         """
