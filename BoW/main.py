@@ -45,9 +45,7 @@ if __name__ == '__main__':
     if args.do_train:
 
         start_time = time.time()
-        labeled_data = InputData.get_labeled_data()
-        train_data = InputData.method_data_dictionary(labeled_data, 'train')
-        validation_data = InputData.method_data_dictionary(labeled_data, 'validation')
+        train_data = InputData.get_labeled_data()
 
         if args.do_compute_features:
             train_descriptors = sift_descriptors.extract_features_simple(data_dictionary=train_data)
@@ -74,7 +72,7 @@ if __name__ == '__main__':
         start_time = time.time()
         model = mySVM.load_model(args.model_path)
 
-        test_data = InputData.method_data_dictionary(InputData.get_test_data(), 'test')
+        test_data = InputData.get_test_data()
 
         if args.do_compute_features:
             test_descriptors = sift_descriptors.extract_features_simple(data_dictionary=test_data)
