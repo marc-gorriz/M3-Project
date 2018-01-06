@@ -66,21 +66,35 @@ if __name__ == '__main__':
 
         # train model
         model = mySVM.train(train_visual_words, train_data)
-        # predictions = [classes_names[i] for i in model.predict(visual_words)]
 
-
-
-
-
+        # save model
+        mySVM.save_model(model, args.model_path)
 
 
     elif args.do_test:
 
         start_time = time.time()
+        model = mySVM.load_model(args.model_path)
 
         test_data = InputData.method_data_dictionary(InputData.get_test_data(), 'test')
 
-        model = myKNN.load_model(args.model_path)
+        if args.do_compute_features:
+            test_descriptors = sift_descriptors.extract_features_simple(data_dictionary=test_data)
+            test_codebook = bow_descriptor.compute_codebook(test_descriptors)
+            bow_descriptor.save(test_codebook, os.path.join(args.codebook_path, 'test_codebook.pkl'), 'codebook')
+            test_visual_words = bow_descriptor.extract_features(test_descriptors, test_codebook)
+            bow_descriptor.save(test_visual_words, os.path.join(args.visualwords_path,
+                                'test_visual_words.npy'), 'visualwords')
+
+        else:
+            # codebook = bow_descriptor.load(args.codebook_path, 'codebook')
+            test_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
+                                'test_visual_words.npy'), 'visualwords')
+
+
+
+
+
 
         # test model
         predictions = myKNN.predict(test_data['filenames'], model, display=True)
