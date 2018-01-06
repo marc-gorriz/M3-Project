@@ -89,7 +89,7 @@ class SVM:
 
         stdSlr = StandardScaler().fit(visual_words)
         D_scaled = stdSlr.transform(visual_words)
-        model = svm.SVC(kernel='rbf', C=1, gamma=.002).fit(D_scaled, train_data['train_labels'])
+        model = svm.SVC(kernel='rbf', C=1, gamma=.002).fit(D_scaled, train_data['labels'])
 
         end = time.time()
         print('Done in ' + str(end - init) + ' secs.')

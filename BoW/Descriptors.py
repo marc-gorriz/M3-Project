@@ -218,25 +218,25 @@ class BOW:
 
         return visual_words
 
-    def save(self, file, path, type):
+    def save(self, file, filename, type):
 
         if type == 'codebook':
-            with open(path, 'wb') as file_name:
+            with open(filename, 'wb') as file_name:
                 pickle.dump(file, file_name)
 
         elif type == 'visualwords':
-            np.save(file, path)
+            np.save(filename, file)
         else:
             print('invalid file')
 
-    def load(self, path, type):
+    def load(self, filename, type):
 
         if type == 'codebook':
-            with open(path, 'rb') as file:
-                file = pickle.load(file)
+            with open(filename, 'rb') as file_name:
+                file = pickle.load(file_name)
 
         elif type == 'visualwords':
-            file = np.load(path)
+            file = np.load(filename)
 
         else:
             file = None

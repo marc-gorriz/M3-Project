@@ -56,6 +56,7 @@ if __name__ == '__main__':
             visual_words = bow_descriptor.extract_features(train_descriptors, codebook)
             bow_descriptor.save(visual_words, args.visualwords_path, 'visualwords')
 
+
         else:
             #codebook = bow_descriptor.load(args.codebook_path, 'codebook')
             visual_words = bow_descriptor.load(args.codebook_path, 'visualwords')
