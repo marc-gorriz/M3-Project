@@ -69,13 +69,42 @@ class Input:
         :return:
         """
 
-        return {"filenames": self.train_images_filenames,
-                "labels": self.train_labels}
+        if self.train_method == 'fixed':
+            # return 80% train and 20% validation
+            train_idx = np.arange(int(np.ceil(self.nTrain * 0.8)))
+            validation_idx = np.arange(int(np.ceil(self.nTrain * 0.8)), self.nTrain)
+
+        elif self.train_method == 'kfold':
+            train_idx, validation_idx = self.kfold_generator.next()
+
+        else:
+            train_idx, validation_idx = None, None
+            print('Invalid train method')
+
+
+        return {"train_images_filenames": self.train_images_filenames[train_idx],
+                "train_labels": self.train_labels[train_idx],
+                "validation_images_filenames": self.train_images_filenames[validation_idx],
+                "validation_labels": self.train_labels[validation_idx]}
 
     def get_test_data(self):
         """
 
         :return:
         """
-        return {"filenames": self.test_images_filenames,
-                "labels": self.test_labels}
+        return {"test_images_filenames": self.test_images_filenames,
+                "test_labels": self.test_labels}
+
+    def method_data_dictionary(self, data_dictionary, method):
+        """
+
+        :param data_dictionary:
+        :param method:
+        :return:
+        """
+
+        if method in ['train', 'validation', 'test']:
+            return {"filenames": data_dictionary[str(method) + '_images_filenames'],
+                    "labels": data_dictionary[str(method) + '_labels']}
+        else:
+            print("Invalid method, only train, validation and test are axpected")
