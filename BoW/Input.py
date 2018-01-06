@@ -3,10 +3,9 @@ import random
 
 import pickle
 import numpy as np
-from sklearn.model_selection import KFold
 
 class Input:
-    def __init__(self, workingPath, nsamplesClass, train_method='kfold', k=5, shuffle=True):
+    def __init__(self, workingPath, nsamplesClass, shuffle=True):
         """
 
         :param workingPath:
@@ -16,7 +15,6 @@ class Input:
         :param shuffle:
         """
         self.nsamplesClass = nsamplesClass
-        self.train_method = train_method
         self.shuffle = shuffle
 
         self.train_images_filenames = np.array(pickle.load(open(os.path.join(workingPath, 'train_images_filenames.dat'), 'rb')))
@@ -28,14 +26,6 @@ class Input:
         self.nTrain = len(self.train_images_filenames)
 
         self.reduce_data()
-
-        if train_method not in ["fixed", "kfold"]:
-            print("Invalid data method")
-            #exit()
-
-        if train_method == 'kfold':
-            id_train = np.arange(self.nTrain)
-            self.kfold_generator = KFold(n_splits=k, shuffle = True).split(id_train)
 
     def reduce_data(self):
         """
