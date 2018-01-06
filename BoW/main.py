@@ -2,8 +2,6 @@ import argparse
 import time
 import os
 
-import numpy as np
-
 from Descriptors import SIFT, BOW
 from Evaluation import Evaluation
 from Input import Input
@@ -92,12 +90,7 @@ if __name__ == '__main__':
                                 'test_visual_words.npy'), 'visualwords')
 
 
-
-
-
-
-        # test model
-        predictions = myKNN.predict(test_data['filenames'], model, display=True)
+        predictions = mySVM.predict(model, test_visual_words, test_data)
         myEvaluation.accuracy(test_data['labels'], predictions, display=True)
         myEvaluation.confusion_matrix(test_data['labels'], predictions, display=True)
 
