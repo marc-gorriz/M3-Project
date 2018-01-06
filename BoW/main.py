@@ -47,14 +47,13 @@ if __name__ == '__main__':
 
         if args.do_compute_features:
             train_descriptors = sift_descriptors.extract_features_simple(data_dictionary=train_data)
-            train_codebook = bow_descriptor.compute_codebook(train_descriptors)
-            bow_descriptor.save(train_codebook, os.path.join(args.codebook_path, 'train_codebook.pkl'), 'codebook')
-            train_visual_words = bow_descriptor.extract_features(train_descriptors, train_codebook)
+            codebook = bow_descriptor.compute_codebook(train_descriptors)
+            bow_descriptor.save(codebook, os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
+            train_visual_words = bow_descriptor.extract_features(train_descriptors, codebook)
             bow_descriptor.save(train_visual_words, os.path.join(args.visualwords_path,
                                 'train_visual_words.npy'), 'visualwords')
 
         else:
-            # codebook = bow_descriptor.load(args.codebook_path, 'codebook')
             train_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
                                 'train_visual_words.npy'), 'visualwords')
 
@@ -74,14 +73,12 @@ if __name__ == '__main__':
 
         if args.do_compute_features:
             test_descriptors = sift_descriptors.extract_features_simple(data_dictionary=test_data)
-            test_codebook = bow_descriptor.compute_codebook(test_descriptors)
-            bow_descriptor.save(test_codebook, os.path.join(args.codebook_path, 'test_codebook.pkl'), 'codebook')
-            test_visual_words = bow_descriptor.extract_features(test_descriptors, test_codebook)
+            codebook = bow_descriptor.load(os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
+            test_visual_words = bow_descriptor.extract_features(test_descriptors, codebook)
             bow_descriptor.save(test_visual_words, os.path.join(args.visualwords_path,
                                 'test_visual_words.npy'), 'visualwords')
 
         else:
-            # codebook = bow_descriptor.load(args.codebook_path, 'codebook')
             test_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
                                 'test_visual_words.npy'), 'visualwords')
 
