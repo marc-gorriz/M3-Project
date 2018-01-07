@@ -1,11 +1,13 @@
 import time
-
+import sys
 import cv2
 import numpy as np
 from skimage.feature import hog
 from sklearn import cluster
 import pickle
 
+from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import GridSearchCV
 
 class SIFT:
     def __init__(self, nfeatures):
@@ -15,10 +17,13 @@ class SIFT:
         """
         self.nfeatures = nfeatures
 
-        # TODO: detect if python2 or python3 is used
         # create the SIFT detector object
-        self.SIFTdetector = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)  # @python3
-        # self.SIFTdetector = cv2.SIFT(nfeatures=self.nfeatures) @python2
+        if sys.version_info[0] < 3:
+            # python2
+            self.SIFTdetector = cv2.SIFT(nfeatures=self.nfeatures)
+        else:
+            # python3
+            self.SIFTdetector = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)
 
     def image_features(self, ima):
         """
@@ -57,6 +62,7 @@ class SIFT:
 
         return data, labels
 
+    # used by SVM classifier
     def extract_features_simple(self, data_dictionary):
 
         start_time = time.time()
@@ -210,7 +216,8 @@ class BOW:
         print('Getting Train BoVW representation')
         init = time.time()
         visual_words = np.zeros((len(Train_descriptors), self.k), dtype=np.float32)
-        for i in xrange(len(Train_descriptors)):
+        # TODO: use xrange to Python2 or range to Python3
+        for i in range(len(Train_descriptors)):
             words = codebook.predict(Train_descriptors[i])
             visual_words[i, :] = np.bincount(words, minlength=self.k)
         end = time.time()

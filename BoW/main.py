@@ -1,6 +1,7 @@
 import argparse
 import time
 import os
+import pickle
 
 from Descriptors import SIFT, BOW
 from Evaluation import Evaluation
@@ -57,16 +58,34 @@ if __name__ == '__main__':
             train_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
                                 'train_visual_words.npy'), 'visualwords')
 
+
+        # cross validation
+        best_params_svm = mySVM.cross_validation(train_visual_words, train_data)
+        del mySVM
+        mySVM = SVM(kernel=best_params_svm['kernel'], C=best_params_svm['C'], gamma=best_params_svm['gamma'])
+
         # train model
         model = mySVM.train(train_visual_words, train_data)
 
         # save model
         mySVM.save_model(model, args.model_path)
 
+        # hardcode
+        with open("../../Lab2-BoW/test1/best_params_svm.pkl", 'wb') as file:
+            pickle.dump(best_params_svm, file)
+
 
     elif args.do_test:
 
         start_time = time.time()
+
+        # hardcode
+        with open("../../Lab2-BoW/test1/best_params_svm.pkl", 'rb') as file:
+            best_params_svm = pickle.load(file)
+
+        # loading model and the best parameters found with cross validation
+        del mySVM
+        mySVM = SVM(kernel=best_params_svm['kernel'], C=best_params_svm['C'], gamma=best_params_svm['gamma'])
         model = mySVM.load_model(args.model_path)
 
         test_data = InputData.get_test_data()

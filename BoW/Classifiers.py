@@ -94,7 +94,6 @@ class SVM:
             pickle.dump(stdSlr, file)
 
         D_scaled = stdSlr.transform(train_visual_words)
-
         model = svm.SVC(kernel='rbf', C=1, gamma=.002).fit(D_scaled, train_data['labels'])
 
         end = time.time()
@@ -102,7 +101,7 @@ class SVM:
 
         return model
 
-    def predict(self, model, test_visual_words):
+    def predict(self, model, test_visual_words, test_data):
 
         init = time.time()
 
