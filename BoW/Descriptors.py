@@ -1,5 +1,5 @@
 import time
-import sys
+
 import cv2
 import numpy as np
 from skimage.feature import hog
@@ -10,19 +10,22 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import GridSearchCV
 
 class SIFT:
-    def __init__(self, nfeatures):
+    def __init__(self, nfeatures, type='SIFT', step=5):
         """
 
         :param nfeatures:
+        :param type: SIFT or DENSE
         """
         self.nfeatures = nfeatures
+        self.type = type
+        self.step = step
 
         # create the SIFT detector object
-        if sys.version_info[0] < 3:
-            # python2
+        if cv2.__version__[0]== '2':
+            # OpenCV 2
             self.SIFTdetector = cv2.SIFT(nfeatures=self.nfeatures)
         else:
-            # python3
+            # OpenCV 3
             self.SIFTdetector = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)
 
     def image_features(self, ima):
@@ -32,8 +35,20 @@ class SIFT:
         :return:
         """
 
-        gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
-        kpt, des = self.SIFTdetector.detectAndCompute(gray, None)
+        if self.type == 'SIFT':
+            gray = cv2.cvtColor(ima, cv2.COLOR_BGR2GRAY)
+            kpt, des = self.SIFTdetector.detectAndCompute(gray, None)
+        else:
+            # self.type == 'DENSE'
+
+            sift = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)
+            kp1 = list()
+            for x in range(0, ima.shape[0], self.step):
+                for y in range(0, ima.shape[1], self.step):
+                    kp1.append(cv2.KeyPoint(x, y, np.random.randint(self.step, 30)))
+            kp1 = np.array(kp1)
+            kpt, des = sift.compute(ima, kp1)
+
         return kpt, des
 
     def extract_features(self, data_dictionary):
@@ -67,16 +82,18 @@ class SIFT:
 
         start_time = time.time()
 
-        Train_descriptors = []
+        train_descriptors = []
 
         for idx in range(len(data_dictionary['filenames'])):
             ima = cv2.imread(data_dictionary['filenames'][idx])
             kpt, des = self.image_features(ima)
-            Train_descriptors.append(des)
+            train_descriptors.append(des)
 
         print('SIFT features extracted: done in ' + str(time.time() - start_time) + ' secs')
 
-        return Train_descriptors
+        return train_descriptors
+
+
 
 
 class SURF:
@@ -194,6 +211,7 @@ class BOW:
         size_descriptors = Train_descriptors[0].shape[1]
         D = np.zeros((np.sum([len(p) for p in Train_descriptors]), size_descriptors), dtype=np.uint8)
         startingpoint = 0
+        # TODO:
         for i in range(len(Train_descriptors)):
             D[startingpoint:startingpoint + len(Train_descriptors[i])] = Train_descriptors[i]
             startingpoint += len(Train_descriptors[i])

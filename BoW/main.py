@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # TODO: think about extend the code to other classification methods, features extractors ... maybe a switch?
 
     if args.descriptor == 'bow':
-        sift_descriptors = SIFT(nfeatures=300)
+        sift_descriptors = SIFT(nfeatures=300, type='DENSE', step=50)
         bow_descriptor = BOW(k=512)
 
     else:
