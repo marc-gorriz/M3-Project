@@ -70,15 +70,17 @@ class SIFT:
         start_time = time.time()
 
         Train_descriptors = []
+        data_idx = []
 
         for idx in range(len(data_dictionary['filenames'])):
             ima = cv2.imread(data_dictionary['filenames'][idx])
             kpt, des = self.image_features(ima)
             Train_descriptors.append(des)
+            data_idx.append(idx)
 
         print('SIFT features extracted: done in ' + str(time.time() - start_time) + ' secs')
 
-        return Train_descriptors
+        return Train_descriptors, data_idx
 
 
 class SURF:
