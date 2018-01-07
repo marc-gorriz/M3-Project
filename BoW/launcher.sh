@@ -20,9 +20,9 @@ elif [ "$1" = "test" ]
 then
     if [ "$2" = "compute" ]
     then
-        srun --pty -c 5 --mem 30G python2 main.py --data_path $DATA_PATH --model_path $MODEL_PATH --codebook_path $CODEBOOK_PATH --visualwords_path $VISUALWORDS_PATH --evaluation_path $EVALUATION_PATH --descriptor $DESCRIPTOR --train --compute_features
+        srun --pty -c 5 --mem 30G python2 main.py --data_path $DATA_PATH --model_path $MODEL_PATH --codebook_path $CODEBOOK_PATH --visualwords_path $VISUALWORDS_PATH --evaluation_path $EVALUATION_PATH --descriptor $DESCRIPTOR --test --compute_features
     else
-        srun --pty -c 5 --mem 30G python2 main.py --data_path $DATA_PATH --model_path $MODEL_PATH --codebook_path $CODEBOOK_PATH --visualwords_path $VISUALWORDS_PATH --evaluation_path $EVALUATION_PATH --descriptor $DESCRIPTOR --train
+        srun --pty -c 5 --mem 30G python2 main.py --data_path $DATA_PATH --model_path $MODEL_PATH --codebook_path $CODEBOOK_PATH --visualwords_path $VISUALWORDS_PATH --evaluation_path $EVALUATION_PATH --descriptor $DESCRIPTOR --test
     fi
 else
     echo "Incorrect option"
