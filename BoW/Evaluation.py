@@ -17,7 +17,7 @@ class Evaluation:
     def accuracy(self, ground_truth, predictions, display=True):
         score = accuracy_score(ground_truth, predictions)
         if display == True:
-            print("Accuracy: %f" % score)
+            print("Accuracy: %0.2f" % score)
         return score
 
     def confusion_matrix(self, ground_truth, predictions, display=True):
