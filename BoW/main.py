@@ -3,6 +3,7 @@ import time
 import os
 import pickle
 
+from kernels import pyramid_kernel
 from Descriptors import SIFT, BOW
 from Evaluation import Evaluation
 from Input import Input
@@ -15,9 +16,8 @@ if __name__ == '__main__':
     parser.add_argument('--codebook_path', type=str, default="codebook")
     parser.add_argument('--visualwords_path', type=str, default="visualwords_path")
     parser.add_argument('--evaluation_path', type=str, default="evaluation")
-    parser.add_argument('--descriptor', type=str, default="bow")
+    parser.add_argument('--descriptor', type=str, default="bow_dense_sift")
     parser.add_argument('--classifier', type=str, default="svm")
-    parser.add_argument('--kfold_k', type=int, default=5)
     parser.add_argument('--train', dest='do_train', action='store_true', help='Flag to train or not.')
     parser.add_argument('--test', dest='do_test', action='store_true', help='Flag to test or not.')
     parser.add_argument('--compute_features', dest='do_compute_features', action='store_true',
@@ -27,10 +27,15 @@ if __name__ == '__main__':
 
     InputData = Input(workingPath=args.data_path, nsamplesClass=80, shuffle=False)
 
-    # TODO: think about extend the code to other classification methods, features extractors ... maybe a switch?
+    #Constant
+    spatial_pyramid = True
 
-    if args.descriptor == 'bow':
-        sift_descriptors = SIFT(nfeatures=300, type='DENSE', step=5)
+    if args.descriptor == 'bow_sift':
+        sift_descriptors = SIFT(nfeatures=300, type='SIFT')
+        bow_descriptor = BOW(k=512)
+
+    elif args.descriptor == 'bow_dense_sift':
+        sift_descriptors = SIFT(nfeatures=300, type='DENSE', dense_sift_step=6)
         bow_descriptor = BOW(k=512)
 
     else:
@@ -38,7 +43,6 @@ if __name__ == '__main__':
         bow_descriptor = None
         print('Invalid descriptor')
 
-    mySVM = SVM(kernel='rbf', C=1, gamma=.002)
     myEvaluation = Evaluation(evaluation_path=args.evaluation_path, save_plots=True)
 
     if args.do_train:
@@ -47,32 +51,41 @@ if __name__ == '__main__':
         train_data = InputData.get_labeled_data()
 
         if args.do_compute_features:
-            train_descriptors, train_idx = sift_descriptors.extract_features_simple(data_dictionary=train_data)
-            codebook = bow_descriptor.compute_codebook(train_descriptors)
+            descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=train_data)
+
+            codebook = bow_descriptor.compute_codebook(descriptors)
             bow_descriptor.save(codebook, os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
-            train_visual_words = bow_descriptor.extract_features(train_descriptors, codebook)
-            bow_descriptor.save(train_visual_words, os.path.join(args.visualwords_path,
-                                'train_visual_words.npy'), 'visualwords')
+
+            train_visual_words = bow_descriptor.extract_features(descriptors, codebook, descriptors_idx,
+                                                                 spatial_pyramid=spatial_pyramid)
+
+            bow_descriptor.save(train_visual_words,
+                                os.path.join(args.visualwords_path, 'train_visual_words.npy'), 'visualwords')
 
         else:
             train_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
-                                'train_visual_words.npy'), 'visualwords')
+                                                                  'train_visual_words.npy'), 'visualwords')
 
+        """
+        if spatial_pyramid:
+            # no cross-validation implemented. Fixed kernel
+            mySVM = SVM(kernel=pyramid_kernel)
 
-        # cross validation
-        best_params_svm = mySVM.cross_validation(train_visual_words, train_data)
-        del mySVM
-        mySVM = SVM(kernel=best_params_svm['kernel'], C=best_params_svm['C'], gamma=best_params_svm['gamma'])
+        else:
+            mySVM = SVM(kernel='rbf')
+
+            # cross validation
+            best_params_svm = mySVM.cross_validation(train_visual_words, train_data)
+            del mySVM
+
+            mySVM = SVM(kernel=best_params_svm['kernel'], C=best_params_svm['C'], gamma=best_params_svm['gamma'])
 
         # train model
         model = mySVM.train(train_visual_words, train_data)
 
         # save model
         mySVM.save_model(model, args.model_path)
-
-        # hardcode
-        with open("../../Lab2-BoW/test1/best_params_svm.pkl", 'wb') as file:
-            pickle.dump(best_params_svm, file)
+        """
 
 
     elif args.do_test:
@@ -91,16 +104,18 @@ if __name__ == '__main__':
         test_data = InputData.get_test_data()
 
         if args.do_compute_features:
-            test_descriptors, test_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
+
+            descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
+
             codebook = bow_descriptor.load(os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
-            test_visual_words = bow_descriptor.extract_features(test_descriptors, codebook)
+
+            test_visual_words = bow_descriptor.extract_features(descriptors, codebook, descriptors_idx)
             bow_descriptor.save(test_visual_words, os.path.join(args.visualwords_path,
-                                'test_visual_words.npy'), 'visualwords')
+                                                                'test_visual_words.npy'), 'visualwords')
 
         else:
             test_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
-                                'test_visual_words.npy'), 'visualwords')
-
+                                                                 'test_visual_words.npy'), 'visualwords')
 
         predictions = mySVM.predict(model, test_visual_words, test_data)
         myEvaluation.accuracy(test_data['labels'], predictions, display=True)

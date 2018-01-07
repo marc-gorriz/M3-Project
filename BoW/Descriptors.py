@@ -9,8 +9,9 @@ import pickle
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import GridSearchCV
 
+
 class SIFT:
-    def __init__(self, nfeatures, type='SIFT', step=5):
+    def __init__(self, nfeatures, type='SIFT', dense_sift_step=None):
         """
 
         :param nfeatures:
@@ -18,10 +19,10 @@ class SIFT:
         """
         self.nfeatures = nfeatures
         self.type = type
-        self.step = step
+        self.dense_sift_step = dense_sift_step
 
         # create the SIFT detector object
-        if cv2.__version__[0]== '2':
+        if cv2.__version__[0] == '2':
             # OpenCV 2
             self.SIFTdetector = cv2.SIFT(nfeatures=self.nfeatures)
         else:
@@ -40,6 +41,7 @@ class SIFT:
             kpt, des = self.SIFTdetector.detectAndCompute(gray, None)
         else:
             # self.type == 'DENSE'
+
 
             sift = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)
             kp1 = list()
@@ -82,20 +84,32 @@ class SIFT:
 
         start_time = time.time()
 
-        train_descriptors = []
-        train_idx = []
+        descriptors_list = []
 
         for idx in range(len(data_dictionary['filenames'])):
             ima = cv2.imread(data_dictionary['filenames'][idx])
             kpt, des = self.image_features(ima)
-            train_descriptors.append(des)
-            train_idx.append(idx)
+            descriptors_list.append(des)
+
+        size_descriptors = descriptors_list[0].shape[1]
+        len_D = np.sum([len(p) for p in descriptors_list])
+
+        descriptors = np.zeros((len_D, size_descriptors), dtype=np.uint8)
+        descriptors_idx = np.zeros(len_D, dtype=int)
+
+        startingpoint = 0
+
+        idx = np.arange(len_D)
+
+        for i in range(len_D):
+            len_Di = len(Train_descriptors[i])
+            descriptors[startingpoint:startingpoint + len_Di] = descriptors_list[i]
+            descriptors_idx[startingpoint:startingpoint + len_Di] = [idx[i]] * len_Di
+            startingpoint += len_Di
 
         print('SIFT features extracted: done in ' + str(time.time() - start_time) + ' secs')
 
-        return train_descriptors, train_idx
-
-
+        return descriptors, descriptors_idx
 
 
 class SURF:
@@ -208,45 +222,77 @@ class BOW:
     def __init__(self, k):
         self.k = k
 
-    def compute_codebook(self, Train_descriptors):
-        # Transform everything to numpy arrays
-        size_descriptors = Train_descriptors[0].shape[1]
-        D = np.zeros((np.sum([len(p) for p in Train_descriptors]), size_descriptors), dtype=np.uint8)
-        startingpoint = 0
-        # TODO:
-        for i in range(len(Train_descriptors)):
-            D[startingpoint:startingpoint + len(Train_descriptors[i])] = Train_descriptors[i]
-            startingpoint += len(Train_descriptors[i])
+    def compute_codebook(self, descriptors):
 
         print('Computing kmeans with ' + str(self.k) + ' centroids')
-
         init = time.time()
+
         codebook = cluster.MiniBatchKMeans(n_clusters=self.k, verbose=False, batch_size=self.k * 20,
                                            compute_labels=False,
                                            reassignment_ratio=10 ** -4, random_state=42)
-        codebook.fit(D)
+        codebook.fit(descriptors)
 
         end = time.time()
         print('Done in ' + str(end - init) + ' secs.')
-        return codebook
+        return codebook, matrix_idx
 
-    def extract_features(self, Train_descriptors, codebook, path=None):
+    def extract_features(self, descriptors, descriptors_idx, codebook, spatial_pyramid=True):
 
         # get train visual word encoding
         print('Getting Train BoVW representation')
         init = time.time()
-        visual_words = np.zeros((len(Train_descriptors), self.k), dtype=np.float32)
-        # TODO: use xrange to Python2 or range to Python3
-        for i in range(len(Train_descriptors)):
-            words = codebook.predict(Train_descriptors[i])
-            visual_words[i, :] = np.bincount(words, minlength=self.k)
+
+        codebook_predictions = codebook.predict(descriptors)
+
+        if not spatial_pyramid:
+            init = time.time()
+            visual_words = np.zeros((len(Train_descriptors), self.k), dtype=np.float32)
+
+            for i in range(0, train_idx.max() + 1):
+                visual_words[i, :] = np.bincount(codebook_predictions[descriptors_idx == i], minlength=self.k)
+
+        else:
+            visual_words = extract_pyramid_visual_words(codebook_predictions, descriptors_idx, self.dense_sift_step)
+
         end = time.time()
         print('Done in ' + str(end - init) + ' secs.')
 
         return visual_words
 
-    def save(self, file, filename, type):
+    def extract_pyramid_visual_words(self, codebook_predictions, descriptors_idx):
 
+        assert self.dense_sift_step is not None, "Invalid dense_sift_step"
+
+        # constants
+        img_shape = [256, 256]
+        pyramid_levels = [[1, 1], [2, 2], [4, 4]]
+        keypoints_shape = map(int, [np.ceil(img_shape[0] / self.dense_sift_step), np.ceil(img_shape[1] / self.dense_sift_step)])
+
+        total_features = self.k * np.sum([level[0] * level[1] for level in pyramid_levels])
+        visual_words = np.zeros(descriptors_idx.max(), total_features, dtype=np.float64)
+
+        for image_idx in range(0, descriptors_indices.max() + 1):
+
+            image_words_grid = np.reshape(codebook_predictions[descriptors_idx == image_idx], keypoints_shape)
+
+            image_representation = np.zeros(self.k * len(pyramid_levels))
+            representation_point = 0
+
+            for pyramid_level in range(0, len(pyramid_levels)):
+                step_i = int(np.ceil(keypoints_shape[0] / pyramid_levels[pyramid_level][0]))
+                step_j = int(np.ceil(keypoints_shape[1] / pyramid_levels[pyramid_level][1]))
+
+                for i in range(0, keypoints_shape[0], step_i):
+                    for j in range(0, keypoints_shape[1], step_j):
+                        image_representation[representation_point:representation_point+self.k] = np.array(np.bincount(image_words_grid[i:i + step_i, j:j + step_j].reshape(-1), minlength=self.k))
+                        representation_point += self.k
+
+                visual_words[image_idx] = image_representation
+
+        return visual_words
+
+
+    def save(self, file, filename, type):
         if type == 'codebook':
             with open(filename, 'wb') as file_name:
                 pickle.dump(file, file_name)
@@ -256,8 +302,8 @@ class BOW:
         else:
             print('invalid file')
 
-    def load(self, filename, type):
 
+    def load(self, filename, type):
         if type == 'codebook':
             with open(filename, 'rb') as file_name:
                 file = pickle.load(file_name)
@@ -270,5 +316,3 @@ class BOW:
             print('Invalid path')
 
         return file
-
-
