@@ -83,7 +83,7 @@ if __name__ == '__main__':
                                 'test_visual_words.npy'), 'visualwords')
 
 
-        predictions = mySVM.predict(model, test_visual_words, test_data)
+        predictions = mySVM.predict(model, test_visual_words)
         myEvaluation.accuracy(test_data['labels'], predictions, display=True)
         myEvaluation.confusion_matrix(test_data['labels'], predictions, display=True)
 
