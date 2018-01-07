@@ -59,6 +59,7 @@ if __name__ == '__main__':
                                 'train_visual_words.npy'), 'visualwords')
 
 
+        """
         # cross validation
         best_params_svm = mySVM.cross_validation(train_visual_words, train_data)
         del mySVM
@@ -73,6 +74,8 @@ if __name__ == '__main__':
         # hardcode
         with open("../../Lab2-BoW/test1/best_params_svm.pkl", 'wb') as file:
             pickle.dump(best_params_svm, file)
+            
+        """
 
 
     elif args.do_test:
