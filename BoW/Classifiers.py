@@ -88,7 +88,7 @@ class SVM:
         stdSlr = StandardScaler().fit(train_visual_words)
 
         # hardcode
-        with open("../../Lab2-BoW/test1/stdSlr.pkl", 'wb') as file:
+        with open("/imatge/mgorriz/work/master/models/session02/test1/stdSlr.pkl", 'wb') as file:
             pickle.dump(stdSlr, file)
 
         D_scaled = stdSlr.transform(train_visual_words)
@@ -103,7 +103,7 @@ class SVM:
         init = time.time()
 
         # hardcode
-        with open("../../Lab2-BoW/test1/stdSlr.pkl", 'rb') as file:
+        with open("/imatge/mgorriz/work/master/models/session02/test1/stdSlr.pkl", 'rb') as file:
             stdSlr = pickle.load(file)
 
         D_scaled = stdSlr.transform(test_visual_words)
@@ -132,9 +132,9 @@ class SVM:
             grid.fit(D_scaled, train_data['labels'])
             print("Best parameters: %s Accuracy: %0.2f" % (grid.best_params_, grid.best_score_))
 
-            # hardcode
-            with open("../../Lab2-BoW/test1/best_params_svm.pkl", 'wb') as file:
-                pickle.dump(grid.best_params_, file)
+        # hardcode
+        with open("/imatge/mgorriz/work/master/models/session02/test1/best_params_svm.pkl", 'wb') as file:
+            pickle.dump(grid.best_params_, file)
 
         return grid.best_params_
 

@@ -27,7 +27,6 @@ if __name__ == '__main__':
 
     InputData = Input(workingPath=args.data_path, nsamplesClass=80, shuffle=False)
 
-    #Constant
     spatial_pyramid = True
 
     if args.descriptor == 'bow_sift':
