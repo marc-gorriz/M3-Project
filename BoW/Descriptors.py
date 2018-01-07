@@ -16,7 +16,7 @@ class SIFT:
         :param nfeatures:
         """
         self.nfeatures = nfeatures
-
+        """
         # create the SIFT detector object
         if sys.version_info[0] < 3:
             # python2
@@ -24,6 +24,8 @@ class SIFT:
         else:
             # python3
             self.SIFTdetector = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)
+        """
+        self.SIFTdetector = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)
 
     def image_features(self, ima):
         """
