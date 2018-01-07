@@ -6,6 +6,8 @@ import numpy as np
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import GridSearchCV
 
 
 class KNN:
@@ -56,8 +58,8 @@ class KNN:
             _, des = self.features_descriptor.image_features(ima)
 
             prediction = model.predict(des)
-            # values, counts = np.unique(prediction, return_counts=True)
-            # predictions = np.hstack((predictions, values[np.argmax(counts)]))
+            #values, counts = np.unique(prediction, return_counts=True)
+            #predictions = np.hstack((predictions, values[np.argmax(counts)]))
             predictions = np.hstack((predictions, prediction))
 
         return predictions
@@ -74,24 +76,27 @@ class KNN:
 
 
 class SVM:
+
     def __init__(self, kernel='rbf', C=1, gamma=.002):
         self.kernel = kernel
         self.C = C
         self.gamma = gamma
 
+
     def train(self, train_visual_words, train_data):
+
         print('Training the SVM classifier...')
 
         init = time.time()
 
         stdSlr = StandardScaler().fit(train_visual_words)
 
-        # hardcode
+        #hardcode
         with open("../../Lab2-BoW/test1/stdSlr.pkl", 'wb') as file:
             pickle.dump(stdSlr, file)
 
         D_scaled = stdSlr.transform(train_visual_words)
-        model = svm.SVC(kernel='rbf', C=1, gamma=.002).fit(D_scaled, train_data['labels'])
+        model = svm.SVC(kernel=self.kernel, C=self.C, gamma=self.gamma).fit(D_scaled, train_data['labels'])
 
         end = time.time()
         print('Done in ' + str(end - init) + ' secs.')
@@ -99,9 +104,10 @@ class SVM:
         return model
 
     def predict(self, model, test_visual_words, test_data):
+
         init = time.time()
 
-        # hardcode
+        #hardcode
         with open("../../Lab2-BoW/test1/stdSlr.pkl", 'rb') as file:
             stdSlr = pickle.load(file)
 
@@ -109,6 +115,31 @@ class SVM:
         predictions = model.predict(D_scaled)
 
         return predictions
+
+    def cross_validation(self, train_visual_words, train_data):
+
+        # TODO: parameters of this function: tuned_parameter and scores, and n_splits, ...
+        # Set the parameters by cross-validation
+        tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 2e-3, 1e-4],
+                             'C': [1, 10, 100]},
+                            {'kernel': ['linear'], 'C': [1, 10, 100]}]
+
+        scores = ['precision', 'recall']
+
+        kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+        for score in scores:
+            print("# Tuning hyper-parameters for %s" % score)
+            print()
+            grid = GridSearchCV(svm.SVC(), tuned_parameters, cv=kfold,
+                               scoring='%s_macro' % score)
+            stdSlr = StandardScaler().fit(train_visual_words)
+            D_scaled = stdSlr.transform(train_visual_words)
+            grid.fit(D_scaled, train_data['labels'])
+            print("Best parameters: %s Accuracy: %0.2f" % (grid.best_params_, grid.best_score_))
+
+        return grid.best_params_
+
 
     def save_model(self, model, path):
         with open(path, 'wb') as file:
@@ -119,3 +150,5 @@ class SVM:
             model = pickle.load(file)
 
         return model
+
+
