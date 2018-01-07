@@ -47,7 +47,7 @@ if __name__ == '__main__':
         train_data = InputData.get_labeled_data()
 
         if args.do_compute_features:
-            train_descriptors = sift_descriptors.extract_features_simple(data_dictionary=train_data)
+            train_descriptors, train_idx = sift_descriptors.extract_features_simple(data_dictionary=train_data)
             codebook = bow_descriptor.compute_codebook(train_descriptors)
             bow_descriptor.save(codebook, os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
             train_visual_words = bow_descriptor.extract_features(train_descriptors, codebook)
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         test_data = InputData.get_test_data()
 
         if args.do_compute_features:
-            test_descriptors = sift_descriptors.extract_features_simple(data_dictionary=test_data)
+            test_descriptors, test_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
             codebook = bow_descriptor.load(os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
             test_visual_words = bow_descriptor.extract_features(test_descriptors, codebook)
             bow_descriptor.save(test_visual_words, os.path.join(args.visualwords_path,
