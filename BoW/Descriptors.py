@@ -219,8 +219,9 @@ class HOG:
 
 
 class BOW:
-    def __init__(self, k):
+    def __init__(self, k, pyramid_levels):
         self.k = k
+        self.pyramid_levels = pyramid_levels
 
     def compute_codebook(self, descriptors):
 
@@ -265,22 +266,21 @@ class BOW:
 
         # constants
         img_shape = [256, 256]
-        pyramid_levels = [[1, 1], [2, 2], [4, 4]]
         keypoints_shape = map(int, [np.ceil(img_shape[0] / self.dense_sift_step), np.ceil(img_shape[1] / self.dense_sift_step)])
 
-        total_features = self.k * np.sum([level[0] * level[1] for level in pyramid_levels])
+        total_features = self.k * np.sum([level[0] * level[1] for level in self.pyramid_levels])
         visual_words = np.zeros(descriptors_idx.max(), total_features, dtype=np.float64)
 
         for image_idx in range(0, descriptors_indices.max() + 1):
 
             image_words_grid = np.reshape(codebook_predictions[descriptors_idx == image_idx], keypoints_shape)
 
-            image_representation = np.zeros(self.k * len(pyramid_levels))
+            image_representation = np.zeros(self.k * len(self.pyramid_levels))
             representation_point = 0
 
-            for pyramid_level in range(0, len(pyramid_levels)):
-                step_i = int(np.ceil(keypoints_shape[0] / pyramid_levels[pyramid_level][0]))
-                step_j = int(np.ceil(keypoints_shape[1] / pyramid_levels[pyramid_level][1]))
+            for pyramid_level in range(0, len(self.pyramid_levels)):
+                step_i = int(np.ceil(keypoints_shape[0] / self.pyramid_levels[pyramid_level][0]))
+                step_j = int(np.ceil(keypoints_shape[1] / self.pyramid_levels[pyramid_level][1]))
 
                 for i in range(0, keypoints_shape[0], step_i):
                     for j in range(0, keypoints_shape[1], step_j):

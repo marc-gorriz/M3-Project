@@ -3,7 +3,7 @@ import time
 import os
 import pickle
 
-from kernels import pyramid_kernel
+from kernels import Pyramid_Kernel
 from Descriptors import SIFT, BOW
 from Evaluation import Evaluation
 from Input import Input
@@ -27,15 +27,17 @@ if __name__ == '__main__':
 
     InputData = Input(workingPath=args.data_path, nsamplesClass=80, shuffle=False)
 
+    #Constants
     spatial_pyramid = True
+    pyramid_levels = [[1, 1], [2, 2], [4, 4]]
 
     if args.descriptor == 'bow_sift':
         sift_descriptors = SIFT(nfeatures=300, type='SIFT')
-        bow_descriptor = BOW(k=512)
+        bow_descriptor = BOW(k=512, pyramid_levels=pyramid_levels)
 
     elif args.descriptor == 'bow_dense_sift':
         sift_descriptors = SIFT(nfeatures=300, type='DENSE', dense_sift_step=6)
-        bow_descriptor = BOW(k=512)
+        bow_descriptor = BOW(k=512, pyramid_levels=pyramid_levels)
 
     else:
         sift_descriptors = None
@@ -65,10 +67,10 @@ if __name__ == '__main__':
             train_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
                                                                   'train_visual_words.npy'), 'visualwords')
 
-        """
         if spatial_pyramid:
             # no cross-validation implemented. Fixed kernel
-            mySVM = SVM(kernel=pyramid_kernel)
+            kernel = Pyramid_Kernel(k=512, pyramid_levels=pyramid_levels)
+            mySVM = SVM(kernel=kernel.pyramid_kernel)
 
         else:
             mySVM = SVM(kernel='rbf')
@@ -84,7 +86,6 @@ if __name__ == '__main__':
 
         # save model
         mySVM.save_model(model, args.model_path)
-        """
 
 
     elif args.do_test:
