@@ -45,9 +45,9 @@ class SIFT:
 
             sift = cv2.xfeatures2d.SIFT_create(nfeatures=self.nfeatures)
             kp1 = list()
-            for x in range(0, ima.shape[0], self.step):
-                for y in range(0, ima.shape[1], self.step):
-                    kp1.append(cv2.KeyPoint(x, y, np.random.randint(self.step, 30)))
+            for x in range(0, ima.shape[0], self.dense_sift_step):
+                for y in range(0, ima.shape[1], self.dense_sift_step):
+                    kp1.append(cv2.KeyPoint(x, y, np.random.randint(self.dense_sift_step, 30)))
             kp1 = np.array(kp1)
             kpt, des = sift.compute(ima, kp1)
 
