@@ -48,17 +48,18 @@ if __name__ == '__main__':
 
         if args.do_compute_features:
             train_descriptors = sift_descriptors.extract_features_simple(data_dictionary=train_data)
-            codebook = bow_descriptor.compute_codebook(train_descriptors)
-            bow_descriptor.save(codebook, os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
-            train_visual_words = bow_descriptor.extract_features(train_descriptors, codebook)
-            bow_descriptor.save(train_visual_words, os.path.join(args.visualwords_path,
-                                'train_visual_words.npy'), 'visualwords')
+            #codebook = bow_descriptor.compute_codebook(train_descriptors)
+            #bow_descriptor.save(codebook, os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
+            #train_visual_words = bow_descriptor.extract_features(train_descriptors, codebook)
+            #bow_descriptor.save(train_visual_words, os.path.join(args.visualwords_path,
+            #                    'train_visual_words.npy'), 'visualwords')
 
         else:
             train_visual_words = bow_descriptor.load(os.path.join(args.visualwords_path,
                                 'train_visual_words.npy'), 'visualwords')
 
 
+        """
         # cross validation
         best_params_svm = mySVM.cross_validation(train_visual_words, train_data)
         del mySVM
@@ -73,6 +74,8 @@ if __name__ == '__main__':
         # hardcode
         with open("../../Lab2-BoW/test1/best_params_svm.pkl", 'wb') as file:
             pickle.dump(best_params_svm, file)
+            
+        """
 
 
     elif args.do_test:
@@ -102,7 +105,7 @@ if __name__ == '__main__':
                                 'test_visual_words.npy'), 'visualwords')
 
 
-        predictions = mySVM.predict(model, test_visual_words, test_data)
+        predictions = mySVM.predict(model, test_visual_words)
         myEvaluation.accuracy(test_data['labels'], predictions, display=True)
         myEvaluation.confusion_matrix(test_data['labels'], predictions, display=True)
 
