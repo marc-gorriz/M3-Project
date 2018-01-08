@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     InputData = Input(workingPath=args.data_path, nsamplesClass=80, shuffle=False)
 
-    #Constants
+    # Constants
     spatial_pyramid = True
     pyramid_levels = [[1, 1], [2, 2], [4, 4]]
 
@@ -52,7 +52,11 @@ if __name__ == '__main__':
         train_data = InputData.get_labeled_data()
 
         if args.do_compute_features:
-            descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=train_data)
+            # descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=train_data)
+            train_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test1/test_descriptors.pkl"
+            descriptors, descriptors_idx = \
+                sift_descriptors.extract_features_simple(data_dictionary=train_data,
+                                                         load=True, path=train_descriptors_path)
 
             codebook = bow_descriptor.compute_codebook(descriptors)
             bow_descriptor.save(codebook, os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
@@ -92,20 +96,28 @@ if __name__ == '__main__':
 
         start_time = time.time()
 
-        # hardcode
-        with open("../../Lab2-BoW/test1/best_params_svm.pkl", 'rb') as file:
-            best_params_svm = pickle.load(file)
+        if spatial_pyramid:
+            # no cross-validation implemented. Fixed kernel
+            kernel = Pyramid_Kernel(k=512, pyramid_levels=pyramid_levels)
+            mySVM = SVM(kernel=kernel.pyramid_kernel)
+        else:
+            # hardcode, load best parameters found with cross validation
+            with open("/imatge/mgorriz/work/master/models/session02/test1/best_params_svm.pkl", 'rb') as file:
+                best_params_svm = pickle.load(file)
 
-        # loading model and the best parameters found with cross validation
-        del mySVM
-        mySVM = SVM(kernel=best_params_svm['kernel'], C=best_params_svm['C'], gamma=best_params_svm['gamma'])
+            mySVM = SVM(kernel=best_params_svm['kernel'], C=best_params_svm['C'], gamma=best_params_svm['gamma'])
+
         model = mySVM.load_model(args.model_path)
 
         test_data = InputData.get_test_data()
 
         if args.do_compute_features:
 
-            descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
+            # descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
+            test_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test1/test_descriptors.pkl"
+            descriptors, descriptors_idx = \
+                sift_descriptors.extract_features_simple(data_dictionary=test_data,
+                                                         load=True, path=test_descriptors_path)
 
             codebook = bow_descriptor.load(os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
 

@@ -80,16 +80,22 @@ class SIFT:
         return data, labels
 
     # used by SVM classifier
-    def extract_features_simple(self, data_dictionary):
+    def extract_features_simple(self, data_dictionary, load = False, path=None):
 
         start_time = time.time()
 
-        descriptors_list = []
+        if load:
+            assert path is not None, "Invalid Path"
 
-        for idx in range(len(data_dictionary['filenames'])):
-            ima = cv2.imread(data_dictionary['filenames'][idx])
-            kpt, des = self.image_features(ima)
-            descriptors_list.append(des)
+            with open(path, 'rb') as file:
+                descriptors_list = pickle.load(file)
+        else:
+            descriptors_list = []
+
+            for idx in range(len(data_dictionary['filenames'])):
+                ima = cv2.imread(data_dictionary['filenames'][idx])
+                kpt, des = self.image_features(ima)
+                descriptors_list.append(des)
 
         size_descriptors = descriptors_list[0].shape[1]
         len_D = np.sum([len(p) for p in descriptors_list])
