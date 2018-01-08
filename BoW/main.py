@@ -113,11 +113,11 @@ if __name__ == '__main__':
 
         if args.do_compute_features:
 
-            descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
-            #test_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test2/test_descriptors.pkl"
-            #descriptors, descriptors_idx = \
-            #    sift_descriptors.extract_features_simple(data_dictionary=test_data,
-            #                                             load=True, path=test_descriptors_path)
+            #descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
+            test_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test2/test_descriptors.npy"
+            descriptors, descriptors_idx = \
+                sift_descriptors.extract_features_simple(data_dictionary=test_data,
+                                                         load=True, path=test_descriptors_path)
 
             codebook = bow_descriptor.load(os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
 

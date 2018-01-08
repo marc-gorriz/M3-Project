@@ -87,8 +87,8 @@ class SIFT:
         if load:
             assert path is not None, "Invalid Path"
 
-            with open(path, 'rb') as file:
-                descriptors_list = pickle.load(file)
+            descriptors_list = list(np.load(path))
+
         else:
             descriptors_list = []
 
@@ -110,7 +110,7 @@ class SIFT:
         idx = np.arange(len_D)
 
         for i in range(len_D):
-            len_Di = len(Train_descriptors[i])
+            len_Di = len(descriptors_list[i])
             descriptors[startingpoint:startingpoint + len_Di] = descriptors_list[i]
             descriptors_idx[startingpoint:startingpoint + len_Di] = [idx[i]] * len_Di
             startingpoint += len_Di
