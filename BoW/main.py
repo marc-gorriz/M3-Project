@@ -52,11 +52,11 @@ if __name__ == '__main__':
         train_data = InputData.get_labeled_data()
 
         if args.do_compute_features:
-            # descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=train_data)
-            train_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test2/test_descriptors.pkl"
-            descriptors, descriptors_idx = \
-                sift_descriptors.extract_features_simple(data_dictionary=train_data,
-                                                         load=True, path=train_descriptors_path)
+            descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=train_data)
+            #train_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test2/train_descriptors.pkl"
+            #descriptors, descriptors_idx = \
+            #    sift_descriptors.extract_features_simple(data_dictionary=train_data,
+            #                                           load=True, path=train_descriptors_path)
 
             codebook = bow_descriptor.compute_codebook(descriptors)
             bow_descriptor.save(codebook, os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
@@ -113,11 +113,11 @@ if __name__ == '__main__':
 
         if args.do_compute_features:
 
-            # descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
-            test_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test2/test_descriptors.pkl"
-            descriptors, descriptors_idx = \
-                sift_descriptors.extract_features_simple(data_dictionary=test_data,
-                                                         load=True, path=test_descriptors_path)
+            descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
+            #test_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test2/test_descriptors.pkl"
+            #descriptors, descriptors_idx = \
+            #    sift_descriptors.extract_features_simple(data_dictionary=test_data,
+            #                                             load=True, path=test_descriptors_path)
 
             codebook = bow_descriptor.load(os.path.join(args.codebook_path, 'codebook.pkl'), 'codebook')
 
