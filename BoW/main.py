@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
         if args.do_compute_features:
             # descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=train_data)
-            train_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test1/test_descriptors.pkl"
+            train_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test2/test_descriptors.pkl"
             descriptors, descriptors_idx = \
                 sift_descriptors.extract_features_simple(data_dictionary=train_data,
                                                          load=True, path=train_descriptors_path)
@@ -114,7 +114,7 @@ if __name__ == '__main__':
         if args.do_compute_features:
 
             # descriptors, descriptors_idx = sift_descriptors.extract_features_simple(data_dictionary=test_data)
-            test_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test1/test_descriptors.pkl"
+            test_descriptors_path = "/imatge/mgorriz/work/master/models/session02/test2/test_descriptors.pkl"
             descriptors, descriptors_idx = \
                 sift_descriptors.extract_features_simple(data_dictionary=test_data,
                                                          load=True, path=test_descriptors_path)

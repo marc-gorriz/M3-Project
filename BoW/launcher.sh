@@ -1,10 +1,10 @@
 #!/bin/bash
 
 DATA_PATH="/imatge/mgorriz/work/master/Databases/MIT_split"
-MODEL_PATH="/imatge/mgorriz/work/master/models/session02/test1/model.pkl"
-CODEBOOK_PATH="/imatge/mgorriz/work/master/models/session02/test1/"
+MODEL_PATH="/imatge/mgorriz/work/master/models/session02/test2/model.pkl"
+CODEBOOK_PATH="/imatge/mgorriz/work/master/models/session02/test2/"
 VISUALWORDS_PATH="/imatge/mgorriz/work/master/models/session02/test1/"
-EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session02/test1/confusion_matrix.png"
+EVALUATION_PATH="/imatge/mgorriz/work/master/evaluation/session02/test2/confusion_matrix.png"
 
 DESCRIPTOR="bow_dense_sift"
 

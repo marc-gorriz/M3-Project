@@ -132,6 +132,26 @@ class SVM:
             grid.fit(D_scaled, train_data['labels'])
             print("Best parameters: %s Accuracy: %0.2f" % (grid.best_params_, grid.best_score_))
 
+            print()
+            print("Grid scores on development set:")
+            print()
+            means = grid.cv_results_['mean_test_score']
+            stds = grid.cv_results_['std_test_score']
+            for mean, std, params in zip(means, stds, grid.cv_results_['params']):
+                print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+            print()
+
+            print("Detailed classification report:")
+            print()
+            print("The model is trained on the full development set.")
+            print("The scores are computed on the full evaluation set.")
+            print()
+
+            print()
+
+            y_true, y_pred = train_data['labels'], grid.predict(D_scaled)
+            print(classification_report(y_true, y_pred))
+
         # hardcode
         with open("/imatge/mgorriz/work/master/models/session02/test1/best_params_svm.pkl", 'wb') as file:
             pickle.dump(grid.best_params_, file)
