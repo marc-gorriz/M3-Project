@@ -97,6 +97,8 @@ class SIFT:
                 kpt, des = self.image_features(ima)
                 descriptors_list.append(des)
 
+        np.save(np.array(descriptors_list), path)
+
         size_descriptors = descriptors_list[0].shape[1]
         len_D = np.sum([len(p) for p in descriptors_list])
 
