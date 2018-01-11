@@ -8,6 +8,7 @@ from keras.utils import plot_model
 IMG_SIZE    = 32
 BATCH_SIZE  = 16
 DATASET_DIR = '/home/datasets/scenes/MIT_split'
+TENSORBOARD_DIR = ''
 MODEL_FNAME = 'my_first_mlp.h5'
 
 if not os.path.exists(DATASET_DIR):
@@ -66,18 +67,23 @@ validation_generator = test_datagen.flow_from_directory(
         classes = ['coast','forest','highway','inside_city','mountain','Opencountry','street','tallbuilding'],
         class_mode='categorical')
 
+#Tensorboard
+tensorboard = TensorBoard(log_dir=TENSORBOARD_DIR, histogram_freq=0, write_graph=True, write_images=False)
+
 history = model.fit_generator(
         train_generator,
         steps_per_epoch=1881 // BATCH_SIZE,
         epochs=50,
         validation_data=validation_generator,
-        validation_steps=807 // BATCH_SIZE)
+        validation_steps=807 // BATCH_SIZE,
+        callbacks = [tensorboard])
 
 colorprint(Color.BLUE, 'Done!\n')
 colorprint(Color.BLUE, 'Saving the model into '+MODEL_FNAME+' \n')
 model.save_weights(MODEL_FNAME)  # always save your weights after training or during training
 colorprint(Color.BLUE, 'Done!\n')
 
+"""
   # summarize history for accuracy
 plt.plot(history.history['acc'])
 plt.plot(history.history['val_acc'])
@@ -95,3 +101,4 @@ plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.savefig('loss.jpg')
+"""
