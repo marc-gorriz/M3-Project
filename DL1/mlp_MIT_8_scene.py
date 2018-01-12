@@ -1,4 +1,3 @@
-import os
 from utils import *
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Reshape
@@ -7,10 +6,6 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import plot_model
 import matplotlib.pyplot as plt
 from keras.callbacks import TensorBoard
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--output_path', type=str, default="path")
-args = parser.parse_args()
 
 #user defined variables
 IMG_SIZE    = 32
