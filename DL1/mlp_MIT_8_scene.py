@@ -8,11 +8,15 @@ from keras.utils import plot_model
 import matplotlib.pyplot as plt
 from keras.callbacks import TensorBoard
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--output_path', type=str, default="path")
+args = parser.parse_args()
+
 #user defined variables
 IMG_SIZE    = 32
 BATCH_SIZE  = 16
 DATASET_DIR = '../../Databases/MIT_split'
-OUTPUT_DIR = '../../DL1-OUTPUT/train1'
+OUTPUT_DIR = '../../DL1-OUTPUT/' + args.output_path
 MODEL_FNAME = os.path.join(OUTPUT_DIR, 'weigths.h5')
 
 if not os.path.exists(DATASET_DIR):

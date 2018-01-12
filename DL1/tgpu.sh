@@ -9,5 +9,5 @@
 #SBATCH -e %x_%u_%j.err         # File to which STDERR will be written
 
 #echo $CUDA_VISIBLE_DEVICES >> /tmp/${SLURM_JOB_ID}
-python ~/work/M3-Project/DL1/mlp_MIT_8_scene.py
+python ~/work/M3-Project/DL1/mlp_MIT_8_scene.py --output_path "$1"
 #echo $CUDA_VISIBLE_DEVICES >> /tmp/${SLURM_JOB_ID}
