@@ -16,8 +16,7 @@ args = parser.parse_args()
 IMG_SIZE    = 32
 BATCH_SIZE  = 16
 DATASET_DIR = '../../Databases/MIT_split'
-OUTPUT_DIR = '../../DL1-OUTPUT/' + args.output_path
-MODEL_FNAME = os.path.join(OUTPUT_DIR, 'weigths.h5')
+MODEL_FNAME = 'weigths.h5'
 
 if not os.path.exists(DATASET_DIR):
   colorprint(Color.RED, 'ERROR: dataset directory '+DATASET_DIR+' do not exists!\n')
@@ -42,7 +41,7 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 print(model.summary())
-plot_model(model, to_file=os.path.join(OUTPUT_DIR, 'modelMLP.png'), show_shapes=True, show_layer_names=True)
+plot_model(model, to_file='modelMLP.png', show_shapes=True, show_layer_names=True)
 
 colorprint(Color.BLUE, 'Done!\n')
 
@@ -103,7 +102,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig(os.path.join(OUTPUT_DIR, 'accuracy.jpg'))
+plt.savefig('accuracy.jpg')
 plt.close()
   # summarize history for loss
 plt.plot(history.history['loss'])
@@ -112,4 +111,4 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig(os.path.join(OUTPUT_DIR, 'loss.jpg'))
+plt.savefig('loss.jpg')
