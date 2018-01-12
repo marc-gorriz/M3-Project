@@ -1,3 +1,4 @@
+import os
 from utils import *
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Reshape
@@ -11,15 +12,15 @@ from keras.callbacks import TensorBoard
 IMG_SIZE    = 32
 BATCH_SIZE  = 16
 DATASET_DIR = '../../Databases/MIT_split'
-TENSORBOARD_DIR = '../../DL1-OUTPUT/train1'
-MODEL_FNAME = '../../DL1-OUTPUT/train1/weigths.h5'
+OUTPUT_DIR = '../../DL1-OUTPUT/train1'
+MODEL_FNAME = os.path.join(OUTPUT_DIR, 'weigths.h5')
 
 if not os.path.exists(DATASET_DIR):
   colorprint(Color.RED, 'ERROR: dataset directory '+DATASET_DIR+' do not exists!\n')
   quit()
 
-if not os.path.exists(TENSORBOARD_DIR):
-    os.makedirs(TENSORBOARD_DIR)
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 
 
 
@@ -37,7 +38,7 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 print(model.summary())
-plot_model(model, to_file='../../DL1-OUTPUT/train1/modelMLP.png', show_shapes=True, show_layer_names=True)
+plot_model(model, to_file=os.path.join(OUTPUT_DIR, 'modelMLP.png'), show_shapes=True, show_layer_names=True)
 
 colorprint(Color.BLUE, 'Done!\n')
 
@@ -75,7 +76,7 @@ validation_generator = test_datagen.flow_from_directory(
         class_mode='categorical')
 
 #Tensorboard
-tensorboard = TensorBoard(log_dir=TENSORBOARD_DIR, histogram_freq=0, write_graph=True, write_images=False)
+tensorboard = TensorBoard(log_dir=OUTPUT_DIR, histogram_freq=0, write_graph=True, write_images=False)
 
 history = model.fit_generator(
         train_generator,
@@ -98,7 +99,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('accuracy.jpg')
+plt.savefig(os.path.join(OUTPUT_DIR, 'accuracy.jpg'))
 plt.close()
   # summarize history for loss
 plt.plot(history.history['loss'])
@@ -107,4 +108,4 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('loss.jpg')
+plt.savefig(os.path.join(OUTPUT_DIR, 'loss.jpg'))
