@@ -1,3 +1,4 @@
+import os
 from utils import *
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Reshape
@@ -11,7 +12,8 @@ from keras.callbacks import TensorBoard
 IMG_SIZE    = 32
 BATCH_SIZE  = 16
 DATASET_DIR = '../../Databases/MIT_split'
-MODEL_FNAME = 'weigths.h5'
+OUTPUT_DIR = '../../DL1-OUTPUT/train1'
+MODEL_FNAME = os.path.join(OUTPUT_DIR, 'weigths.h5')
 
 if not os.path.exists(DATASET_DIR):
   colorprint(Color.RED, 'ERROR: dataset directory '+DATASET_DIR+' do not exists!\n')
@@ -28,7 +30,7 @@ colorprint(Color.BLUE, 'Building MLP model...\n')
 model = Sequential()
 model.add(Reshape((IMG_SIZE*IMG_SIZE*3,),input_shape=(IMG_SIZE, IMG_SIZE, 3),name='first'))
 model.add(Dense(units=2048, activation='relu',name='second'))
-model.add(Dense(units=1024, activation='relu'))
+#model.add(Dense(units=1024, activation='relu'))
 model.add(Dense(units=8, activation='softmax'))
 
 model.compile(loss='categorical_crossentropy',
@@ -36,7 +38,7 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 print(model.summary())
-plot_model(model, to_file='modelMLP.png', show_shapes=True, show_layer_names=True)
+plot_model(model, to_file=os.path.join(OUTPUT_DIR, 'modelMLP.png'), show_shapes=True, show_layer_names=True)
 
 colorprint(Color.BLUE, 'Done!\n')
 
@@ -97,7 +99,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('accuracy.jpg')
+plt.savefig(os.path.join(OUTPUT_DIR, 'accuracy.jpg'))
 plt.close()
   # summarize history for loss
 plt.plot(history.history['loss'])
@@ -106,4 +108,4 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('loss.jpg')
+plt.savefig(os.path.join(OUTPUT_DIR, 'loss.jpg'))
