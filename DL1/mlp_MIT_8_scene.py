@@ -2,18 +2,25 @@ from utils import *
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Reshape
 from keras.preprocessing.image import ImageDataGenerator
+
 from keras.utils import plot_model
+import matplotlib.pyplot as plt
+from keras.callbacks import TensorBoard
 
 #user defined variables
 IMG_SIZE    = 32
 BATCH_SIZE  = 16
-DATASET_DIR = '/home/datasets/scenes/MIT_split'
-TENSORBOARD_DIR = ''
+DATASET_DIR = '../../Databases/MIT_split'
+TENSORBOARD_DIR = '../../DL1-OUTPUT/train1'
 MODEL_FNAME = 'my_first_mlp.h5'
 
 if not os.path.exists(DATASET_DIR):
   colorprint(Color.RED, 'ERROR: dataset directory '+DATASET_DIR+' do not exists!\n')
   quit()
+
+if not os.path.exists(TENSORBOARD_DIR):
+    os.makedirs(TENSORBOARD_DIR)
+
 
 
 colorprint(Color.BLUE, 'Building MLP model...\n')
@@ -83,8 +90,8 @@ colorprint(Color.BLUE, 'Saving the model into '+MODEL_FNAME+' \n')
 model.save_weights(MODEL_FNAME)  # always save your weights after training or during training
 colorprint(Color.BLUE, 'Done!\n')
 
-"""
-  # summarize history for accuracy
+
+# summarize history for accuracy
 plt.plot(history.history['acc'])
 plt.plot(history.history['val_acc'])
 plt.title('model accuracy')
@@ -101,4 +108,3 @@ plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.savefig('loss.jpg')
-"""
