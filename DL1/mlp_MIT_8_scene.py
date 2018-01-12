@@ -12,7 +12,7 @@ IMG_SIZE    = 32
 BATCH_SIZE  = 16
 DATASET_DIR = '../../Databases/MIT_split'
 TENSORBOARD_DIR = '../../DL1-OUTPUT/train1'
-MODEL_FNAME = 'my_first_mlp.h5'
+MODEL_FNAME = '../../DL1-OUTPUT/train1/weigths.h5'
 
 if not os.path.exists(DATASET_DIR):
   colorprint(Color.RED, 'ERROR: dataset directory '+DATASET_DIR+' do not exists!\n')
@@ -37,7 +37,7 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 print(model.summary())
-plot_model(model, to_file='modelMLP.png', show_shapes=True, show_layer_names=True)
+plot_model(model, to_file='../../DL1-OUTPUT/train1/modelMLP.png', show_shapes=True, show_layer_names=True)
 
 colorprint(Color.BLUE, 'Done!\n')
 
