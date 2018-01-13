@@ -3,6 +3,7 @@ from utils import *
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Reshape
 from keras.preprocessing.image import ImageDataGenerator
+from sklearn.feature_extraction import image
 
 #user defined variables
 PATCH_SIZE  = 64
