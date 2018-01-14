@@ -1,5 +1,5 @@
 import os
-import pickle
+import cPickle as pickle 
 from keras.layers import Flatten, Dense, Reshape
 from keras.models import Sequential, Model
 from keras.preprocessing.image import ImageDataGenerator
@@ -11,6 +11,8 @@ import constants
 
 
 def get_model_layer(model):
+    print(model)
+    print(model.layers)
     return Model(input=model.input, output=model.get_layer(constants.LAYER_FEATURES_GENERATOR).output)
 
 def batch_single_features(batch_images, model):
@@ -18,7 +20,7 @@ def batch_single_features(batch_images, model):
 
 
 def image_multiple_features(image, img_idx, model):
-    patches = extract_patches_2d(image, (constants.PATCH_SIZE, constants.N_PATCHES), max_patches=n_patches)
+    patches = extract_patches_2d(image, (constants.PATCH_SIZE, constants.PATCH_SIZE), max_patches=constants.N_PATCHES)
     features_idx = np.array([img_idx] * len(patches))
     return model.predict(patches), features_idx
 
@@ -40,7 +42,7 @@ def extract_layer_features(generator, n_images, model):
     return np.vstack(features_map), np.hstack(labels)
 
 
-def extract_visual_words(generator, n_images, model, k, codebook_path=None):
+def extract_visual_words(generator, n_images, model, k, codebook_path=None, output_path=None):
     features_map = []
     idx_map = []
     labels = []
@@ -66,18 +68,20 @@ def extract_visual_words(generator, n_images, model, k, codebook_path=None):
                                            reassignment_ratio=10 ** -4, random_state=42)
         codebook.fit(features_map)
 
-        if codebook_path is not None:
-            with open(os.path.join(codebook_path, 'codebook.pkl'), 'wb') as filename:
-                pickle.dump(codebook, filename)
+        
+        assert output_path is not None
+        with open(os.path.join(output_path, 'codebook.pkl'), 'wb') as filename:
+            pickle.dump(codebook, filename)
 
     else:
-        with open(os.path.join(codebook_path, 'codebook.pkl'), 'wb') as filename:
+        with open(os.path.join(codebook_path, 'codebook.pkl'), 'rb') as filename:
             codebook = pickle.load(filename)
-
+    
+    labels = np.hstack(labels)
     # compute visual words
     codebook_predictions = codebook.predict(features_map)
-    visual_words = np.zeros((idx_map.max(), k), dtype=np.float32)
-    for idx in range(0, idx_map.max()):
+    visual_words = np.zeros((len(labels), k), dtype=np.float32)
+    for idx in range(0, len(labels)):
         visual_words[idx, :] = np.bincount(codebook_predictions[idx_map == idx], minlength=k)
 
-    return visual_words, np.hstack(labels)
+    return visual_words, labels

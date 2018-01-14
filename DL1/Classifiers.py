@@ -1,7 +1,14 @@
+import os
+import cPickle as pickle
+#import pickle
+import matplotlib.pyplot as plt
 from keras.layers import Flatten, Dense, Reshape
 from keras.models import Sequential
+from sklearn import svm
 from sklearn.preprocessing import StandardScaler
 import numpy as np
+from keras.utils import plot_model
+from keras.callbacks import TensorBoard
 
 import constants
 
@@ -19,8 +26,8 @@ class MLP:
         model.add(Reshape((input_size * input_size * 3,), input_shape=(input_size, input_size, 3)))
 
         model.add(Dense(units=2048, activation='relu', name='hidden1'))
-        model.add(Dense(units=1024, activation='relu', name='hidden2'))
-        model.add(Dense(units=512, activation='relu', name='hidden3'))
+       # model.add(Dense(units=1024, activation='relu', name='hidden2'))
+       # model.add(Dense(units=512, activation='relu', name='hidden3'))
 
         model.add(Dense(units=n_classes, activation='softmax'))
 
@@ -81,7 +88,9 @@ class MLP:
 
     def load_model(self, model_path):
         assert os.path.exists(model_path), 'Invalid model path'
-        return self.build_mlp().load_weights(model_path)
+        model = self.build_mlp()
+        model.load_weights(model_path)
+        return model
 
 
 class SVM:
@@ -102,7 +111,7 @@ class SVM:
                 pickle.dump(stdSlr, filename)
 
         else:
-            with open(os.path.join(stdSlr_path, 'stdSlr.pkl'), 'wb') as filename:
+            with open(os.path.join(stdSlr_path, 'stdSlr.pkl'), 'rb') as filename:
                 stdSlr = pickle.load(filename)
 
         features = stdSlr.transform(features)
@@ -114,7 +123,7 @@ class SVM:
 
     def predict_svm(self, features, model, stdSlr_path):
         assert os.path.exists(stdSlr_path), 'Invalid stdSlr path'
-        with open(os.path.join(stdSlr_path, 'stdSlr.pkl'), 'wb') as filename:
+        with open(os.path.join(stdSlr_path), 'rb') as filename:
             stdSlr = pickle.load(filename)
 
         features = stdSlr.transform(features)
@@ -122,7 +131,7 @@ class SVM:
 
     def load_model(self, model_path):
         assert os.path.exists(model_path), 'Invalid model path'
-        with open(model_path, 'wb') as filename:
+        with open(model_path, 'rb') as filename:
             model = pickle.load(filename)
         return model
 

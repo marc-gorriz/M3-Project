@@ -7,7 +7,12 @@ import mlp_features
 from Classifiers import MLP, SVM
 from utils import *
 
-OUTPUT_DIR = '../../DL1-OUTPUT/train/' + str(sys.argv[1])
+import getpass
+import os
+os.environ["CUDA_VISIBLE_DEVICES"]=getpass.getuser()[-1]
+
+
+OUTPUT_DIR = '../../DL1-OUTPUT/train' + str(sys.argv[1])
 
 if not os.path.exists(constants.DATASET_DIR):
     colorprint(Color.RED, 'ERROR: dataset directory ' + constants.DATASET_DIR + ' do not exists!\n')
@@ -17,16 +22,18 @@ if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
 # Data generation
-if constants.FEATURES_EXTRACTOR is 'bow' and constants.CLASSIFIER is 'svm': constants.IMG_SIZE = constants.DATA_SIZE
+IMG_SIZE = constants.IMG_SIZE
+if constants.FEATURES_EXTRACTOR is 'bow' and constants.CLASSIFIER is 'svm': IMG_SIZE = constants.DATA_SIZE
+
 
 train_datagen = ImageDataGenerator(rescale=1. / 255, horizontal_flip=True)
 train_generator = train_datagen.flow_from_directory(
-    DATASET_DIR + '/train', target_size=(constants.IMG_SIZE, constants.IMG_SIZE),
+    constants.DATASET_DIR + '/train', target_size=(IMG_SIZE, IMG_SIZE),
     batch_size=constants.BATCH_SIZE, classes=constants.CLASSES, class_mode='categorical')
 
 test_datagen = ImageDataGenerator(rescale=1. / 255)
 test_generator = test_datagen.flow_from_directory(
-    DATASET_DIR + '/test', target_size=(constants.IMG_SIZE, constants.IMG_SIZE),
+    constants.DATASET_DIR + '/test', target_size=(IMG_SIZE, IMG_SIZE),
     batch_size=constants.BATCH_SIZE, classes=constants.CLASSES, class_mode='categorical')
 
 if constants.DO_TRAIN:
@@ -45,7 +52,8 @@ if constants.DO_TRAIN:
                                                                              n_images=constants.N_TRAIN,
                                                                              model=features_model,
                                                                              k=constants.BOW_K,
-                                                                             codebook_path=constants.CODEBOOK_PATH)
+                                                                             codebook_path=None,
+									     output_path=OUTPUT_DIR)
         else:
             print('Invalid features extractor')
             train_features = None
@@ -55,7 +63,7 @@ if constants.DO_TRAIN:
         # SVM training
         SVM(output_path=OUTPUT_DIR).train_svm(features=train_features,
                                               labels=train_labels,
-                                              stdSlr_path=constants.STDSLR_PATH,
+                                              stdSlr_path=None,
                                               save_model=True)
 
     elif constants.CLASSIFIER is 'mlp':
@@ -82,7 +90,7 @@ if constants.DO_TEST:
                                                                            n_images=constants.N_TEST,
                                                                            model=features_model,
                                                                            k=constants.BOW_K,
-                                                                           codebook_path=constants.CODEBOOK_PATH)
+                                                                           codebook_path=OUTPUT_DIR)
         else:
             print('Invalid features extractor')
             test_features = None
@@ -107,5 +115,5 @@ if constants.DO_TEST:
         quit()
 
     # Overall evaluations
-    Evaluation.accuracy(ground_truth=labels, predictions=predictions, display=True)
-    Evaluation.confusion_matrix(ground_truth=labels, predictions=predictions, display=True, output_path=OUTPUT_DIR)
+    Evaluation.accuracy(ground_truth=test_labels, predictions=predictions, display=True)
+    Evaluation.confusion_matrix(ground_truth=test_labels, predictions=predictions, display=True, output_path=os.path.join(OUTPUT_DIR, 'confusion_matrix.png'))

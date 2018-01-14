@@ -1,5 +1,5 @@
-DO_TRAIN = True
-DO_TEST = False
+DO_TRAIN = False
+DO_TEST = True
 
 # Data generation
 DATASET_DIR = '../../Databases/MIT_split'
@@ -13,18 +13,18 @@ IMG_SIZE = 32
 BATCH_SIZE = 16
 
 # Features extraction
-INPUT_PATH = '../../DL1-OUTPUT/train/train1/'
+INPUT_PATH = '../../outputs/DL1-OUTPUT-0004/train1/'
 FEATURES_MODEL = INPUT_PATH + 'weights.h5'
-CODEBOOK_PATH = INPUT_PATH + 'codebook.pkl'
+#CODEBOOK_PATH = INPUT_PATH + 'codebook.pkl'
 
-FEATURES_EXTRACTOR = 'simple'  # simple, bow
+FEATURES_EXTRACTOR = 'bow'  # simple, bow
 
 PATCH_SIZE = 32
-N_PATCHES = 12
+N_PATCHES = 48
 
-LAYER_FEATURES_GENERATOR = 'hidden2'
-BOW_K = 32
+LAYER_FEATURES_GENERATOR = 'hidden1'
+BOW_K = 512
 
 # Classifiers
-CLASSIFIER = 'svm'  # svm, mlp
-EPOCHS = 100
+CLASSIFIER = 'mlp'  # svm, mlp
+EPOCHS = 80
