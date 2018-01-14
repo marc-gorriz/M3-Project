@@ -1,5 +1,5 @@
 from matplotlib import use
-matplotlib.use('Agg')  # Deactivate display
+use('Agg')  # Deactivate display
 import matplotlib.pyplot as plt
 from pandas_ml import ConfusionMatrix
 from sklearn.metrics import accuracy_score
