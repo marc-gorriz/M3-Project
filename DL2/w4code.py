@@ -17,7 +17,7 @@ train_data_dir='../../Databases/MIT_split/train'
 test_data_dir='../../Databases/MIT_split/test'
 img_width = 224
 img_height=224
-batch_size=32
+batch_size=5
 number_of_epoch=20
 
 
