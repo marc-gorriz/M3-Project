@@ -45,6 +45,7 @@ base_model = VGG16(weights='imagenet')
 x = base_model.get_layer('block4_pool').output
 #x = Conv2D(64,1, activation='relu')(x)
 x = Flatten(name='flatten')(x)
+x = Dense(4096, activation='relu', name='fc1')(x)
 x = Dense(1024, activation='relu', name='fc1')(x)
 x = Dense(8, activation='softmax', name='predictions')(x)
 
@@ -61,7 +62,7 @@ for layer in model.layers:
 model.summary()
 
 #preprocessing_function=preprocess_input,
-"""
+
 datagen = ImageDataGenerator(featurewise_center=False,
     samplewise_center=False,
     featurewise_std_normalization=False,
@@ -78,9 +79,9 @@ datagen = ImageDataGenerator(featurewise_center=False,
     horizontal_flip=False,
     vertical_flip=False,
     rescale=None)
-"""
+
 #train_datagen = ImageDataGenerator(rescale=1. / 255, horizontal_flip=True)
-datagen = ImageDataGenerator()
+#datagen = ImageDataGenerator()
 
 train_generator = datagen.flow_from_directory(train_data_dir,
         target_size=(img_width, img_height),
