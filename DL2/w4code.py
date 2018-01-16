@@ -80,7 +80,7 @@ datagen = ImageDataGenerator(featurewise_center=False,
     rescale=None)
 """
 #train_datagen = ImageDataGenerator(rescale=1. / 255, horizontal_flip=True)
-train_datagen = ImageDataGenerator()
+datagen = ImageDataGenerator()
 
 train_generator = datagen.flow_from_directory(train_data_dir,
         target_size=(img_width, img_height),
