@@ -17,7 +17,7 @@ train_data_dir='../../Databases/MIT_split/train'
 test_data_dir='../../Databases/MIT_split/test'
 img_width = 224
 img_height=224
-batch_size=5
+batch_size=32
 number_of_epoch=20
 
 
@@ -44,8 +44,8 @@ def preprocess_input(x, dim_ordering='default'):
     
 # create the base pre-trained model
 base_model = VGG16(weights='imagenet')
-
-x = base_model.get_layer('block4_pool').output
+base_model.summary()
+x = base_model.get_layer('block5_pool').output
 #x = Conv2D(64,1, activation='relu')(x)
 x = Flatten(name='flatten')(x)
 #x = Dense(4096, activation='relu', name='fc1')(x)
