@@ -100,7 +100,7 @@ validation_generator = datagen.flow_from_directory(val_data_dir,
         class_mode='categorical')
 """
 history=model.fit_generator(train_generator,
-        samles_per_epoch = 1881,
+        samples_per_epoch = 1881,
         nb_epoch=number_of_epoch,
         validation_data=test_generator,
         validation_samples=807)
