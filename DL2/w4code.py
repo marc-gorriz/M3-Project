@@ -43,9 +43,9 @@ def preprocess_input(x, dim_ordering='default'):
 base_model = VGG16(weights='imagenet')
 
 x = base_model.get_layer('block4_pool').output
-x = Conv2D(64,1, activation='relu')(x)
+#x = Conv2D(64,1, activation='relu')(x)
 x = Flatten(name='flatten')(x)
-x = Dense(1021, activation='relu', name='fc1')(x)
+x = Dense(4096, activation='relu', name='fc1')(x)
 x = Dense(8, activation='softmax', name='predictions')(x)
 
 for layer in base_model.layers:
