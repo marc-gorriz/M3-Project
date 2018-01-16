@@ -46,7 +46,7 @@ x = base_model.get_layer('block4_pool').output
 #x = Conv2D(64,1, activation='relu')(x)
 x = Flatten(name='flatten')(x)
 x = Dense(4096, activation='relu', name='fc1')(x)
-x = Dense(1024, activation='relu', name='fc1')(x)
+x = Dense(1024, activation='relu', name='fc2')(x)
 x = Dense(8, activation='softmax', name='predictions')(x)
 
 for layer in base_model.layers:
