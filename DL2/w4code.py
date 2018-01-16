@@ -4,7 +4,7 @@ from keras.models import Model
 from keras.layers import Flatten, Conv2D
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
-from keras.utils.visualize_util import plot
+#from keras.utils.visualize_util import plot
 from keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 
@@ -52,7 +52,7 @@ for layer in base_model.layers:
     layer.trainable = False
 
 model = Model(inputs=base_model.input, outputs=x)
-plot(model, to_file='modelVGG16b.png', show_shapes=True, show_layer_names=True)
+#plot(model, to_file='modelVGG16b.png', show_shapes=True, show_layer_names=True)
 
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 for layer in model.layers:
