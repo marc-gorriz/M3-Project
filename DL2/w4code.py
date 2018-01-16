@@ -42,7 +42,7 @@ def preprocess_input(x, dim_ordering='default'):
 # create the base pre-trained model
 base_model = VGG16(weights='imagenet')
 
-x = base_model.get_layer('block4_pool').output
+x = base_model.get_layer('block3_pool').output
 #x = Conv2D(64,1, activation='relu')(x)
 x = Flatten(name='flatten')(x)
 x = Dense(4096, activation='relu', name='fc1')(x)
