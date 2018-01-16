@@ -103,7 +103,7 @@ history=model.fit_generator(train_generator,
         samples_per_epoch = 1881,
         nb_epoch=number_of_epoch,
         validation_data=test_generator,
-        validation_samples=807)
+        nb_val_samples=807)
 
 #result = model.evaluate_generator(test_generator, val_samples=807)
 #print result
