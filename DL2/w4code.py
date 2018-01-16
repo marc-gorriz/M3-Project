@@ -95,10 +95,9 @@ validation_generator = datagen.flow_from_directory(val_data_dir,
         class_mode='categorical')
 """
 history=model.fit_generator(train_generator,
-        samples_per_epoch=batch_size*(int(400*1881/1881//batch_size)+1),
+        steps_per_epoch=1881 // constants.BATCH_SIZE,
         nb_epoch=number_of_epoch,
-        validation_data=test_generator,
-        nb_val_samples=807)
+        validation_steps=807 // constants.BATCH_SIZE)
 
 
 result = model.evaluate_generator(test_generator, val_samples=807)
