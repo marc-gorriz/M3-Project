@@ -42,11 +42,11 @@ def preprocess_input(x, dim_ordering='default'):
 # create the base pre-trained model
 base_model = VGG16(weights='imagenet')
 
-x = base_model.get_layer('block3_pool').output
+x = base_model.get_layer('block5_pool').output
 #x = Conv2D(64,1, activation='relu')(x)
 x = Flatten(name='flatten')(x)
-x = Dense(4096, activation='relu', name='fc1')(x)
-x = Dense(1024, activation='relu', name='fc2')(x)
+#x = Dense(4096, activation='relu', name='fc1')(x)
+x = Dense(4096, activation='relu', name='fc2')(x)
 x = Dense(8, activation='softmax', name='predictions')(x)
 
 for layer in base_model.layers:
@@ -59,7 +59,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['a
 for layer in model.layers:
     print layer.name, layer.trainable
 
-model.summary()
+#model.summary()
 
 #preprocessing_function=preprocess_input,
 
@@ -100,12 +100,12 @@ validation_generator = datagen.flow_from_directory(val_data_dir,
         class_mode='categorical')
 """
 history=model.fit_generator(train_generator,
-        steps_per_epoch=1881 // batch_size,
-        nb_epoch=number_of_epoch,
-        validation_steps=807 // batch_size)
+        #steps_per_epoch=1881 // batch_size,
+        nb_epoch=number_of_epoch)
+        #validation_steps=807 // batch_size)
 
-result = model.evaluate_generator(test_generator, val_samples=807)
-print result
+#result = model.evaluate_generator(test_generator, val_samples=807)
+#print result
 
 
 # list all data in history
