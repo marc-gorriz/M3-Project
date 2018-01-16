@@ -1,7 +1,7 @@
 from keras.applications.vgg16 import VGG16
 from keras.preprocessing import image
 from keras.models import Model
-from keras.layers import Flatten
+from keras.layers import Flatten, Conv2D
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
 from keras.utils.visualize_util import plot
@@ -9,9 +9,9 @@ from keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 
 
-train_data_dir='/data/MIT/train'
-val_data_dir='/data/MIT/test'
-test_data_dir='/data/MIT/test'
+train_data_dir='../../Databases/MIT_split/train'
+#val_data_dir='/data/MIT/test'
+test_data_dir='../../Databases/MIT_split/test'
 img_width = 224
 img_height=224
 batch_size=32
@@ -83,20 +83,21 @@ train_generator = datagen.flow_from_directory(train_data_dir,
         batch_size=batch_size,
         class_mode='categorical')
 
+
 test_generator = datagen.flow_from_directory(test_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
-
+"""
 validation_generator = datagen.flow_from_directory(val_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
-
+"""
 history=model.fit_generator(train_generator,
         samples_per_epoch=batch_size*(int(400*1881/1881//batch_size)+1),
         nb_epoch=number_of_epoch,
-        validation_data=validation_generator,
+        validation_data=test_generator,
         nb_val_samples=807)
 
 
