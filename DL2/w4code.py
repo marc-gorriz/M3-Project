@@ -8,6 +8,9 @@ from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 
+import getpass
+import os
+os.environ["CUDA_VISIBLE_DEVICES"]=getpass.getuser()[-1]
 
 train_data_dir='../../Databases/MIT_split/train'
 #val_data_dir='/data/MIT/test'
