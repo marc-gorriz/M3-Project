@@ -5,7 +5,7 @@ from keras.layers import Flatten, Conv2D
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
 #from keras.utils.visualize_util import plot
-from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 import matplotlib.pyplot as plt
 
 import getpass
@@ -86,9 +86,12 @@ datagen = ImageDataGenerator(featurewise_center=False,
     rescale=None)
 
 #Preview resultant images:
+img = load_img(train_data_dir+'/forest/cdmc282.jpg')  # this is a PIL image
+x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
+x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
 i = 0
 for batch in datagen.flow(x, batch_size=1,
-                          save_to_dir='preview', save_prefix='cat', save_format='jpeg'):
+                          save_to_dir='preview', save_prefix='image', save_format='jpeg'):
     i += 1
     if i > 20:
         break  # otherwise the generator would loop indefinitely
@@ -118,7 +121,7 @@ history=model.fit_generator(train_generator,
 
 model.save_weights('weights.h5')
 
-result = model.evaluate_generator(test_generator) #, val_samples=807)
+result = model.evaluate_generator(test_generator, nb_validation_samples/batch_size, workers=12) #, val_samples=807)
 print (result)
 
 
