@@ -44,7 +44,7 @@ def preprocess_input(x, dim_ordering='default'):
     
 # create the base pre-trained model
 base_model = VGG16(weights='imagenet')
-base_model.summary()
+#base_model.summary()
 x = base_model.get_layer('block4_pool').output
 x = Conv2D(64,1, activation='relu')(x)
 x = Flatten(name='flatten')(x)
@@ -61,8 +61,8 @@ model = Model(inputs=base_model.input, outputs=x)
 
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 
-for layer in model.layers:
-    print (layer.name, layer.trainable)
+#for layer in model.layers:
+#    print (layer.name, layer.trainable)
 
 #model.summary()
 
@@ -73,11 +73,11 @@ datagen = ImageDataGenerator(featurewise_center=False,
     featurewise_std_normalization=False,
     samplewise_std_normalization=False,
 	preprocessing_function=preprocess_input,
-    rotation_range=40.,
+    rotation_range=0.,
     width_shift_range=0.2,
-    height_shift_range=0.2,
-    shear_range=0.2,
-    zoom_range=0.2,
+    height_shift_range=0.,
+    shear_range=0.,
+    zoom_range=0.,
     channel_shift_range=0.,
     fill_mode='nearest',
     cval=0.,
@@ -86,7 +86,7 @@ datagen = ImageDataGenerator(featurewise_center=False,
     rescale=None)
 
 #Preview resultant images:
-img = load_img(train_data_dir+'/forest/cdmc282.jpg')  # this is a PIL image
+img = load_img(train_data_dir+'/coast/arnat59.jpg')  # this is a PIL image
 x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
 x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
 i = 0
