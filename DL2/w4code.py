@@ -81,7 +81,7 @@ datagen = ImageDataGenerator(featurewise_center=False,
     channel_shift_range=0.,
     fill_mode='nearest',
     cval=0.,
-    horizontal_flip=False,
+    horizontal_flip=True,
     vertical_flip=False,
     rescale=None)
 
