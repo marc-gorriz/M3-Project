@@ -73,11 +73,11 @@ datagen = ImageDataGenerator(featurewise_center=False,
     featurewise_std_normalization=False,
     samplewise_std_normalization=False,
 	preprocessing_function=preprocess_input,
-    rotation_range=0.,
-    width_shift_range=0.,
-    height_shift_range=0.,
-    shear_range=0.,
-    zoom_range=0.,
+    rotation_range=40.,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
     channel_shift_range=0.,
     fill_mode='nearest',
     cval=0.,
@@ -85,9 +85,15 @@ datagen = ImageDataGenerator(featurewise_center=False,
     vertical_flip=False,
     rescale=None)
 
-#train_datagen = ImageDataGenerator(rescale=1. / 255, horizontal_flip=True)
-#datagen = ImageDataGenerator()
+#Preview resultant images:
+i = 0
+for batch in datagen.flow(x, batch_size=1,
+                          save_to_dir='preview', save_prefix='cat', save_format='jpeg'):
+    i += 1
+    if i > 20:
+        break  # otherwise the generator would loop indefinitely
 
+"""
 train_generator = datagen.flow_from_directory(train_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
@@ -136,3 +142,4 @@ if False:
   plt.xlabel('epoch')
   plt.legend(['train', 'validation'], loc='upper left')
   plt.savefig('loss.jpg')
+"""
