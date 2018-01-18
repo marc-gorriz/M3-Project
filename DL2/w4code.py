@@ -68,7 +68,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['a
 
 #preprocessing_function=preprocess_input,
 
-datagen = ImageDataGenerator(featurewise_center=False,
+train_datagen = ImageDataGenerator(featurewise_center=False,
     samplewise_center=False,
     featurewise_std_normalization=False,
     samplewise_std_normalization=False,
@@ -85,31 +85,33 @@ datagen = ImageDataGenerator(featurewise_center=False,
     vertical_flip=False,
     rescale=None)
 
+test_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
+
 """
 #Preview resultant images:
 img = load_img(train_data_dir+'/mountain/land132.jpg')  # this is a PIL image
 x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
 x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
 i = 0
-for batch in datagen.flow(x, batch_size=1,
+for batch in train_datagen.flow(x, batch_size=1,
                           save_to_dir='preview', save_prefix='image', save_format='jpeg'):
     i += 1
     if i > 20:
         break  # otherwise the generator would loop indefinitely
 
 """
-train_generator = datagen.flow_from_directory(train_data_dir,
+train_generator = train_datagen.flow_from_directory(train_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
 
 
-test_generator = datagen.flow_from_directory(test_data_dir,
+test_generator = test_datagen.flow_from_directory(test_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
 
-validation_generator = datagen.flow_from_directory(val_data_dir,
+validation_generator = test_datagen.flow_from_directory(val_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
@@ -118,7 +120,7 @@ history=model.fit_generator(train_generator,
         samples_per_epoch = 400*30, #data augmentation
         nb_epoch=number_of_epoch,
         validation_data=test_generator,
-        nb_val_samples=120*30) #data augmentation
+        nb_val_samples=120) #data augmentation
 
 model.save_weights('weights.h5')
 
