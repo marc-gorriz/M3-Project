@@ -86,7 +86,7 @@ datagen = ImageDataGenerator(featurewise_center=False,
     rescale=None)
 
 #Preview resultant images:
-img = load_img(train_data_dir+'/coast/arnat59.jpg')  # this is a PIL image
+img = load_img(train_data_dir+'/mountain/land132.jpg')  # this is a PIL image
 x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
 x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
 i = 0
