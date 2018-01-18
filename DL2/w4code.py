@@ -85,6 +85,7 @@ datagen = ImageDataGenerator(featurewise_center=False,
     vertical_flip=False,
     rescale=None)
 
+"""
 #Preview resultant images:
 img = load_img(train_data_dir+'/mountain/land132.jpg')  # this is a PIL image
 x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
@@ -114,10 +115,10 @@ validation_generator = datagen.flow_from_directory(val_data_dir,
         class_mode='categorical')
 
 history=model.fit_generator(train_generator,
-        samples_per_epoch = 400,
+        samples_per_epoch = 400*30, #data augmentation
         nb_epoch=number_of_epoch,
         validation_data=test_generator,
-        nb_val_samples=120)
+        nb_val_samples=120*30) #data augmentation
 
 model.save_weights('weights.h5')
 
@@ -145,4 +146,4 @@ if False:
   plt.xlabel('epoch')
   plt.legend(['train', 'validation'], loc='upper left')
   plt.savefig('loss.jpg')
-"""
+
