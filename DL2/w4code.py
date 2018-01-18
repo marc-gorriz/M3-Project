@@ -12,9 +12,9 @@ import getpass
 import os
 os.environ["CUDA_VISIBLE_DEVICES"]=getpass.getuser()[-1]
 
-train_data_dir='../../Databases/MIT_split/train'
-#val_data_dir='/data/MIT/test'
-test_data_dir='../../Databases/MIT_split/test'
+train_data_dir='../../Databases/MIT_split_reduced/train'
+val_data_dir='../../Databases/MIT_split_reduced/validation'
+test_data_dir='../../Databases/MIT_split_reduced/test'
 img_width = 224
 img_height=224
 batch_size=32
@@ -60,8 +60,9 @@ model = Model(inputs=base_model.input, outputs=x)
 #plot(model, to_file='modelVGG16b.png', show_shapes=True, show_layer_names=True)
 
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
+
 for layer in model.layers:
-    print layer.name, layer.trainable
+    print (layer.name, layer.trainable)
 
 #model.summary()
 
@@ -97,20 +98,20 @@ test_generator = datagen.flow_from_directory(test_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
-"""
+
 validation_generator = datagen.flow_from_directory(val_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
         class_mode='categorical')
-"""
+
 history=model.fit_generator(train_generator,
-        samples_per_epoch = 1881,
+        samples_per_epoch = 400,
         nb_epoch=number_of_epoch,
         validation_data=test_generator,
-        nb_val_samples=807)
+        nb_val_samples=120)
 
-#result = model.evaluate_generator(test_generator, val_samples=807)
-#print result
+result = model.evaluate_generator(test_generator) #, val_samples=807)
+print (result)
 
 
 # list all data in history
