@@ -63,7 +63,7 @@ for layer in base_model.layers:
 model = Model(inputs=base_model.input, outputs=x)
 #plot(model, to_file='modelVGG16b.png', show_shapes=True, show_layer_names=True)
 
-adam = Adam(lr=0.0001, momentum=0.9)
+adam = Adam(lr=0.0001)
 model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 #for layer in model.layers:
