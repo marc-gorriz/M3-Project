@@ -131,7 +131,7 @@ history=model.fit_generator(train_generator,
         validation_data=test_generator,
         nb_val_samples=120) #data augmentation
 
-model.save_weights('weights.h5')
+#model.save_weights('weights.h5')
 
 result = model.evaluate_generator(test_generator, nb_validation_samples/batch_size, workers=12) #, val_samples=807)
 print("result: "+str(result))
