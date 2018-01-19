@@ -19,7 +19,7 @@ test_data_dir='../../Databases/MIT_split_reduced/test'
 img_width = 224
 img_height=224
 batch_size=32
-number_of_epoch=25
+number_of_epoch=2
 
 """
 def preprocess_input(x, dim_ordering='default'):
@@ -136,7 +136,7 @@ history=model.fit_generator(train_generator,
 
 #model.save_weights('weights.h5')
 
-result = model.evaluate_generator(test_generator, nb_validation_samples/batch_size, workers=12) #, val_samples=807)
+result = model.evaluate_generator(test_generator, 807, workers=12) #, val_samples=807)
 print("result: "+str(result))
 
 #text_file.write("Train: "+str(sys.argv[1])+" "+str(result)+"\n")
