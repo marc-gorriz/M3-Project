@@ -75,7 +75,7 @@ model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accurac
 
 train_datagen = ImageDataGenerator(featurewise_center=False,
     samplewise_center=True,
-    featurewise_std_normalization=True,
+    featurewise_std_normalization=False,
     samplewise_std_normalization=True,
 	#preprocessing_function=preprocess_input,
     rotation_range=10,
@@ -90,7 +90,10 @@ train_datagen = ImageDataGenerator(featurewise_center=False,
     vertical_flip=False,
     rescale=None)
 
-test_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
+test_datagen = ImageDataGenerator(featurewise_center=False,
+    samplewise_center=True,
+    featurewise_std_normalization=False,
+    samplewise_std_normalization=True)
 
 
 """
