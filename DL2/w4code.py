@@ -5,6 +5,7 @@ from keras.models import Model
 from keras.layers import Flatten, Conv2D, Dropout
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
+from keras.utils import plot_model
 #from keras.utils.visualize_util import plot
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 import matplotlib.pyplot as plt
@@ -63,6 +64,14 @@ for layer in base_model.layers:
 model = Model(inputs=base_model.input, outputs=x)
 #plot(model, to_file='modelVGG16b.png', show_shapes=True, show_layer_names=True)
 
+
+plot_model(model, 'model.png', show_shapes=True,
+                                  show_layer_names=True)
+
+plot_model(base_model, to_file='base_model.png', show_shapes=True,
+                                  show_layer_names=True)
+
+"""
 adam = Adam(lr=0.0001)
 model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
@@ -96,7 +105,7 @@ test_datagen = ImageDataGenerator(featurewise_center=False,
     samplewise_std_normalization=True)
 
 
-"""
+
 #Preview resultant images:
 img = load_img(train_data_dir+'/mountain/land132.jpg')  # this is a PIL image
 x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
@@ -107,7 +116,7 @@ for batch in train_datagen.flow(x, batch_size=1,
     i += 1
     if i > 20:
         break  # otherwise the generator would loop indefinitely
-"""
+
 
 
 
@@ -162,4 +171,4 @@ if False:
   plt.xlabel('epoch')
   plt.legend(['train', 'validation'], loc='upper left')
   plt.savefig('loss.jpg')
-
+"""
