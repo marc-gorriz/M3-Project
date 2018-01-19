@@ -63,7 +63,7 @@ for layer in base_model.layers:
 model = Model(inputs=base_model.input, outputs=x)
 #plot(model, to_file='modelVGG16b.png', show_shapes=True, show_layer_names=True)
 
-adam = Adam(lr=0.0001)
+adam = Adam(lr=0.000 p1)
 model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 #for layer in model.layers:
@@ -75,7 +75,7 @@ model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accurac
 
 train_datagen = ImageDataGenerator(featurewise_center=False,
     samplewise_center=True,
-    featurewise_std_normalization=True,
+    featurewise_std_normalization=False,
     samplewise_std_normalization=True,
 	#preprocessing_function=preprocess_input,
     rotation_range=10,
@@ -90,7 +90,10 @@ train_datagen = ImageDataGenerator(featurewise_center=False,
     vertical_flip=False,
     rescale=None)
 
-test_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
+test_datagen = ImageDataGenerator(featurewise_center=False,
+    samplewise_center=True,
+    featurewise_std_normalization=False,
+    samplewise_std_normalization=True)
 
 
 """
