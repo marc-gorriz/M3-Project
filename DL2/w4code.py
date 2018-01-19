@@ -1,7 +1,8 @@
 from keras.applications.vgg16 import VGG16
 from keras.preprocessing import image
+from keras.optimizers import Adam
 from keras.models import Model
-from keras.layers import Flatten, Conv2D
+from keras.layers import Flatten, Conv2D, Dropout
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
 #from keras.utils.visualize_util import plot
@@ -18,9 +19,9 @@ test_data_dir='../../Databases/MIT_split_reduced/test'
 img_width = 224
 img_height=224
 batch_size=32
-number_of_epoch=20
+number_of_epoch=25
 
-
+"""
 def preprocess_input(x, dim_ordering='default'):
     if dim_ordering == 'default':
         dim_ordering = K.image_dim_ordering()
@@ -41,16 +42,19 @@ def preprocess_input(x, dim_ordering='default'):
         x[:, :, 1] -= 116.779
         x[:, :, 2] -= 123.68
     return x
-    
+"""
+
 # create the base pre-trained model
 base_model = VGG16(weights='imagenet')
-#base_model.summary()
 x = base_model.get_layer('block4_pool').output
 x = Conv2D(64,1, activation='relu')(x)
 x = Flatten(name='flatten')(x)
 #x = Dense(4096, activation='relu', name='fc1')(x)
+#x = Dropout(0.5)(x)
 x = Dense(4096, activation='relu', name='fc1')(x)
+x = Dropout(0.5)(x)
 x = Dense(1024, activation='relu', name='fc2')(x)
+#x = Dropout(0.5)(x)
 x = Dense(8, activation='softmax', name='predictions')(x)
 
 for layer in base_model.layers:
@@ -59,7 +63,8 @@ for layer in base_model.layers:
 model = Model(inputs=base_model.input, outputs=x)
 #plot(model, to_file='modelVGG16b.png', show_shapes=True, show_layer_names=True)
 
-model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
+adam = Adam(lr=0.0001, momentum=0.9)
+model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 #for layer in model.layers:
 #    print (layer.name, layer.trainable)
@@ -69,10 +74,10 @@ model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['a
 #preprocessing_function=preprocess_input,
 
 train_datagen = ImageDataGenerator(featurewise_center=False,
-    samplewise_center=False,
-    featurewise_std_normalization=False,
-    samplewise_std_normalization=False,
-	preprocessing_function=preprocess_input,
+    samplewise_center=True,
+    featurewise_std_normalization=True,
+    samplewise_std_normalization=True,
+	#preprocessing_function=preprocess_input,
     rotation_range=10,
     width_shift_range=0.,
     height_shift_range=0.,
@@ -87,6 +92,7 @@ train_datagen = ImageDataGenerator(featurewise_center=False,
 
 test_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 
+
 """
 #Preview resultant images:
 img = load_img(train_data_dir+'/mountain/land132.jpg')  # this is a PIL image
@@ -98,8 +104,11 @@ for batch in train_datagen.flow(x, batch_size=1,
     i += 1
     if i > 20:
         break  # otherwise the generator would loop indefinitely
-
 """
+
+
+
+
 train_generator = train_datagen.flow_from_directory(train_data_dir,
         target_size=(img_width, img_height),
         batch_size=batch_size,
@@ -117,7 +126,7 @@ validation_generator = test_datagen.flow_from_directory(val_data_dir,
         class_mode='categorical')
 
 history=model.fit_generator(train_generator,
-        samples_per_epoch = 400*30, #data augmentation
+        samples_per_epoch = 400*20, #data augmentation
         nb_epoch=number_of_epoch,
         validation_data=test_generator,
         nb_val_samples=120) #data augmentation
@@ -125,8 +134,10 @@ history=model.fit_generator(train_generator,
 model.save_weights('weights.h5')
 
 result = model.evaluate_generator(test_generator, nb_validation_samples/batch_size, workers=12) #, val_samples=807)
-print (result)
+print("result: "+str(result))
 
+#text_file.write("Train: "+str(sys.argv[1])+" "+str(result)+"\n")
+#text_file.close()
 
 # list all data in history
 
