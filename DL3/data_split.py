@@ -63,9 +63,3 @@ for c in classes:
 		shutil.copy(name, validation_path)
 	for name in test_names:
 		shutil.copy(name, test_path)
-
-
-
-
-
-
