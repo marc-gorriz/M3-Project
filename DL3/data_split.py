@@ -35,7 +35,7 @@ classes = ['coast', 'forest', 'highway', 'inside_city', 'mountain', 'Opencountry
 
 #number files per class to create validation set.
 nb_train_class = 25
-n_test_class = 40
+nb_test_class = 40
 
 output_train = []
 output_validation = []
