@@ -46,12 +46,12 @@ for c in classes:
 	test_path = output_test_data_dir + c + "/"
 	
 	if not os.path.exists(train_path):
-    	os.makedirs(train_path)
-    if not os.path.exists(validation_path):
-    	os.makedirs(validation_path)
-    if not os.path.exists(test_path):
-    	os.makedirs(test_path)
-
+		os.makedirs(train_path)
+	if not os.path.exists(validation_path):
+		os.makedirs(validation_path)
+	if not os.path.exists(test_path):
+		os.makedirs(test_path)
+	
 	train_validation_names, train_names = path_list(train_data_dir + c, nb_train_class)
 	test_validation_names, test_names = path_list(test_data_dir + c, nb_test_class)
 	
