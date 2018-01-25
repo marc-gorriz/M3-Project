@@ -6,7 +6,7 @@ from keras.models import Model
 from keras.regularizers import l2
 
 
-def deep_model_1(img_width, img_height, regularization=0.1, batch_normalization=False, dropout=None, stddev=0):
+def deep_model(img_width, img_height, regularization=0.1, batch_normalization=False, dropout=None, stddev=0):
     inputs = Input(shape=(img_width, img_height, 3), name='input')
     if stddev > 0:
         inputs = GaussianNoise(stddev=stddev)(inputs)
