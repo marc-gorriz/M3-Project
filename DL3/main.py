@@ -3,16 +3,16 @@ import matplotlib.pyplot as plt
 import os
 from keras import backend as K
 from keras.applications.vgg16 import VGG16
+from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.layers import Flatten, Conv2D, Dropout
 from keras.models import Model
 from keras.optimizers import Adadelta
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
-from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping, 
 
-from constants import *
 from cnn_models import deep_model
+from constants import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
 
@@ -26,7 +26,6 @@ log_file = open(global_path + "log_file.txt", 'a')
 model = deep_model(img_width, img_height, regularization, batch_normalization, dropout, stddev)
 
 model.compile(loss, optimizer, metrics=['accuracy'])
-
 
 # Data generation
 train_datagen = ImageDataGenerator(featurewise_center=False,
@@ -44,7 +43,7 @@ train_datagen = ImageDataGenerator(featurewise_center=False,
                                    horizontal_flip=True,
                                    vertical_flip=False,
                                    rescale=None)
-                                   
+
 test_datagen = ImageDataGenerator(featurewise_center=False,
                                   samplewise_center=True,
                                   featurewise_std_normalization=False,
@@ -65,15 +64,11 @@ validation_generator = test_datagen.flow_from_directory(val_data_dir,
                                                         batch_size=batch_size,
                                                         class_mode='categorical')
 
-
-
 # Training model
 tensorboard = TensorBoard(log_dir=output_path, histogram_freq=0, write_graph=True, write_images=False)
-model_checkpoint = ModelCheckpoint(filepath=output_path +'weights.{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+model_checkpoint = ModelCheckpoint(filepath=output_path + 'weights.{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_acc',
+                                   verbose=1, save_best_only=True, mode='max')
 early_stop = EarlyStopping(monitor='val_loss', min_delta=early_delta, patience=early_patience, verbose=0, mode='auto')
-
-
-
 
 history = model.fit_generator(train_generator,
                               samples_per_epoch=nb_train * augmentation_increment,  # data augmentation
@@ -85,4 +80,3 @@ history = model.fit_generator(train_generator,
 result = model.evaluate_generator(test_generator, nb_test, workers=12)
 log_file.write("train" + train_idx + " " + str(result) + "\n")
 log_file.close()
-
