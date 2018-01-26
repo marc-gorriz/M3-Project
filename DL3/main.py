@@ -25,9 +25,9 @@ if not os.path.exists(output_path):
 log_file = open(global_path + "log_file.txt", 'a')
 
 if cnn_model == "deep_model":
-    model = deep_model(img_width, img_height, regularization, batch_normalization, dropout, stddev)
+    model = deep_model()
 elif cnn_model == "cnns_model":
-    model = CNNS_model(img_width, img_height, regularization, stddev, alpha, beta, dropout)
+    model = CNNS_model()
 else:
     print("Invalid model")
     model = None

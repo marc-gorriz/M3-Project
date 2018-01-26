@@ -52,7 +52,7 @@ def deep_model():
 
 
 def CNNS_model():
-    if regularization is not None:
+    if regularization > 0:
         W_regularizer = l2(regularization)
         b_regularizer = l2(regularization)
     else:
