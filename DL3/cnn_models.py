@@ -18,14 +18,14 @@ def deep_model(img_width, img_height, regularization=0.1, batch_normalization=Fa
 
         x = MaxPooling2D(pool_size=(2, 2), name='max_pooling_1')(x)
 
-        x = Convolution2D(64, (3, 3), border_mode='same', W_regularizer=l2(regularization), name='conv_2')(x)
+        x = Convolution2D(64, (3, 3), border_mode='same', name='conv_2')(x)
         if batch_normalization:
             x = BatchNormalization(name='batch_norm_2')(x)
         x = Activation('relu')(x)
 
         x = MaxPooling2D((2, 2), name='max_pooling_2')(x)
 
-        x = Convolution2D(64, (3, 3), border_mode='same', W_regularizer=l2(regularization), name='conv_3')(x)
+        x = Convolution2D(64, (3, 3), border_mode='same', name='conv_3')(x)
         if batch_normalization:
             x = BatchNormalization(name='batch_norm_3')(x)
         x = Activation('relu')(x)
@@ -34,11 +34,11 @@ def deep_model(img_width, img_height, regularization=0.1, batch_normalization=Fa
 
         x = Flatten()(x)
 
-        x = Dense(2048, activation='relu', W_regularizer=l2(regularization), name='fc1')(x)
+        x = Dense(2048, activation='relu', name='fc1')(x)
         if dropout is not None:
             x = Dropout(dropout)(x)
 
-        x = Dense(2048, activation='relu', W_regularizer=l2(regularization), name='fc1')(x)
+        x = Dense(2048, activation='relu', name='fc2')(x)
         if dropout is not None:
             x = Dropout(dropout)(x)
 
