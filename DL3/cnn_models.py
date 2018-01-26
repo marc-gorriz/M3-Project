@@ -3,7 +3,7 @@ from keras.layers import Dense, MaxPooling2D, Flatten, Input, Convolution2D, Bat
 from keras.models import Model
 from keras.regularizers import l2
 
-from KerasLayers.Custom_layers import LRN2D
+from DL3.KerasLayers.Custom_layers import LRN2D
 
 
 def deep_model(img_width, img_height, regularization=0.1, batch_normalization=False, dropout=None, stddev=0):
