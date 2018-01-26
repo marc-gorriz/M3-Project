@@ -76,12 +76,12 @@ validation_generator = test_datagen.flow_from_directory(val_data_dir,
 tensorboard = TensorBoard(log_dir=output_path, histogram_freq=0, write_graph=True, write_images=False)
 model_checkpoint = ModelCheckpoint(filepath=output_path + 'weights.{epoch:02d}.hdf5', monitor='val_acc',
                                    verbose=1, save_best_only=True, mode='max')
-early_stop = EarlyStopping(monitor='val_loss', min_delta=early_delta, patience=early_patience, verbose=0, mode='auto')
+early_stop = EarlyStopping(monitor='val_acc', min_delta=early_delta, patience=early_patience, verbose=0, mode='auto')
 
 history = model.fit_generator(train_generator,
                               samples_per_epoch=nb_train * augmentation_increment,  # data augmentation
                               nb_epoch=number_of_epoch,
-                              validation_data=test_generator,
+                              validation_data=validation_generator,
                               nb_val_samples=nb_validation,
                               callbacks=[tensorboard, model_checkpoint, early_stop])
 

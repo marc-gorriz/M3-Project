@@ -29,7 +29,7 @@ LRN2D_norm = True
 alpha = 0.0001
 beta = 0.75
 
-dropout = 0
+dropout = 0.5
 stddev = 0
 
 early_patience = 3
