@@ -23,7 +23,7 @@ batch_size = 32
 loss = 'categorical_crossentropy'
 optimizer = 'Adam'
 
-regularization = 0.0005 #0.1 (train0, train1, train2)
+regularization = 0.0005
 batch_normalization = True
 LRN2D_norm = True
 alpha = 0.0001
