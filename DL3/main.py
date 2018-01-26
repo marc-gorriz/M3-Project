@@ -12,7 +12,7 @@ from keras.optimizers import Adadelta
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
-from cnn_models_reg import deep_model
+from cnn_models_reg import deep_model, CNNS_model
 from constants import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
@@ -24,7 +24,14 @@ if not os.path.exists(output_path):
 
 log_file = open(global_path + "log_file.txt", 'a')
 
-model = deep_model(img_width, img_height, regularization, batch_normalization, dropout, stddev)
+if cnn_model == "deep_model":
+    model = deep_model(img_width, img_height, regularization, batch_normalization, dropout, stddev)
+elif cnn_model == "cnns_model":
+    model = CNNS_model(img_width, img_height, regularization, stddev, alpha, beta, dropout)
+else:
+    print("Invalid model")
+    model = None
+    quit()
 
 model.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
 
