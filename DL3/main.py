@@ -12,7 +12,7 @@ from keras.optimizers import Adadelta
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
-from cnn_models import deep_model
+from cnn_models_reg import deep_model
 from constants import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
