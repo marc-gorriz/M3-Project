@@ -12,16 +12,13 @@ nb_train = 1681
 nb_validation = 520
 nb_test = 487
 
-augmentation_increment = 20
+augmentation_increment = 5
 
 # Training parameters
 cnn_model = "cnns_model"
 
 number_of_epoch = 15
 batch_size = 32
-
-loss = 'categorical_crossentropy'
-optimizer = 'Adam'
 
 regularization = 0.0005
 batch_normalization = True
@@ -31,6 +28,3 @@ beta = 0.75
 
 dropout = 0.5
 stddev = 0
-
-early_patience = 3
-early_delta = 0
