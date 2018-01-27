@@ -5,7 +5,7 @@ import sys
 from keras import backend as K
 from keras.applications.vgg16 import VGG16
 from keras.optimizers import Adam
-from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping
+from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.layers import Flatten, Conv2D, Dropout
 from keras.models import Model
