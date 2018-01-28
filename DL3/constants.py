@@ -10,7 +10,7 @@ img_height = 224
 
 nb_train = 1681
 nb_validation = 520
-nb_test = 487
+nb_test = 481
 
 augmentation_increment = 5
 

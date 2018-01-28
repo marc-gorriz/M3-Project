@@ -14,7 +14,7 @@ from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
 from cnn_models import deep_model, CNNS_model
-from constants import *
+from constants10 import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = getpass.getuser()[-1]
 
@@ -37,6 +37,7 @@ else:
 optimizer = Adam(lr=1e-5)
 model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
+model.summary()
 
 # Data generation
 def preprocess_input(x, dim_ordering='default'):
@@ -66,7 +67,7 @@ train_datagen = ImageDataGenerator(featurewise_center=False,
                                    featurewise_std_normalization=False,
                                    samplewise_std_normalization=True,
                                    preprocessing_function=preprocess_input,
-                                   rotation_range=10,
+                                   rotation_range=2,
                                    width_shift_range=0.,
                                    height_shift_range=0.,
                                    shear_range=0.2,

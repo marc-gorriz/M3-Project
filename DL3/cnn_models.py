@@ -4,7 +4,7 @@ from keras.models import Model
 from keras.regularizers import l2
 
 from KerasLayers.Custom_layers import LRN2D
-from constants import *
+from constants10 import *
 
 
 def deep_model():
@@ -101,6 +101,6 @@ def CNNS_model():
 
     # Predictions Block
     x = Dense(8, activation='softmax', name='full8')(x)
-    model = Model(inputs, x, name='deep_model')
+    model = Model(inputs, x, name='cnns_model')
 
     return model
